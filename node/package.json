@@ -1,0 +1,12 @@
+{
+  "name": "my-awesome-package",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npm install && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.1",
+    "socket.io": "^2.3.0",
+    "winston": "^3.3.3"
+  }
+}

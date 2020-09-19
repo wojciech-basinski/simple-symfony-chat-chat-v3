@@ -1,0 +1,88 @@
+version: "3.7"
+services:
+  php:
+    build: build/php
+    ports:
+      - "8080:80"
+    volumes:
+      - ./project:/var/www/html/project
+      - ./docker/apache/config:/etc/apache2/sites-enabled
+    networks:
+      - elastic
+      - mysql
+      - rabbitmq
+      - nodejs
+    depends_on:
+      - mysql
+#      - elasticsearch
+#
+  mysql:
+    image: mysql:8.0
+    restart: always
+    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci'
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+    networks:
+      - mysql
+    volumes:
+      - ./docker/db:/var/lib/mysql
+
+#  elasticsearch:
+#    image: elasticsearch:6.8.10
+#    volumes:
+#      - ./docker/elasticsearch/data:/usr/share/elasticsearch/data
+#    networks:
+#      - elastic
+#      - rabbitmq
+#    environment:
+#      - discovery.type=single-node
+#    ports:
+#      - "9200:9200"
+#      - "9300:9300"
+
+#  kibana:
+#    image: kibana:6.8.10
+#    networks:
+#      - elastic
+#    ports:
+#      - "5601:5601"
+#    depends_on:
+#      - elasticsearch
+
+#  rabbitmq:
+#    image: rabbitmq:3.8-management
+#    environment:
+#      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+#      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+#    ports:
+#      - "15672:15672"
+#      - "5672:5672"
+#    networks:
+#      - elastic
+#      - rabbitmq
+
+  nodejs:
+    image: node:current-alpine
+    ports:
+      - "3001:3001"
+    command: npm start
+    working_dir: /usr/app
+    volumes:
+      - ./node:/usr/app
+    networks:
+      - nodejs
+
+networks:
+  elastic:
+    driver: bridge
+  mysql:
+    driver: bridge
+  rabbitmq:
+    driver: bridge
+  nodejs:
+    driver: bridge
