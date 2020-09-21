@@ -36,7 +36,8 @@
     "symfony/web-link": "*",
     "symfony/webpack-encore-bundle": "^1.7",
     "symfony/yaml": "*",
-    "wisembly/elephant.io": "^3.3"
+    "wisembly/elephant.io": "^3.3",
+    "ext-json": "*"
   },
   "require-dev": {
     "symfony/browser-kit": "^3.4",

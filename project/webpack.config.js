@@ -24,7 +24,9 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .enableReactPreset()
+    .enableTypeScriptLoader()
     .addEntry('app', './assets/js/app.js')
+    .addEntry('chat', './assets/js/chat.tsx')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
