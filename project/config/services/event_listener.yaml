@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  App\EventListener\:
+    resource: '../../src/EventListener'
+
+  App\EventListener\MessagePostPersist:
+    arguments:
+      $emitMessage: '@message.emitter.default'
+    tags:
+      - { name: doctrine.event_listener, event: postPersist }

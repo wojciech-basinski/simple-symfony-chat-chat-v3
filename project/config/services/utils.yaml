@@ -1,0 +1,20 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  App\Utils\:
+    resource: '../../src/Utils'
+
+  App\Utils\EmitMessage\EmitNewMessage:
+    arguments:
+      $sockerPath: '%env(SOCKET_PATH)%'
+
+  message.emitter.default:
+    alias: App\Utils\EmitMessage\EmitNewMessage
+
+  App\Utils\ChatConfig:
+    arguments:
+      $botId: '%env(BOT_ID)%'
+      $rollCoolDown: '%env(ROLL_COLLDOWN)%'

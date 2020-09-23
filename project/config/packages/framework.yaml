@@ -16,3 +16,7 @@ framework:
 
     templating:
         engines: ['twig']
+
+    assets:
+        base_urls:
+            - '%env(ASSETS_BASE_URL)%'

@@ -78,7 +78,6 @@ class RollMessageCreate implements SpecialMessageAdd
         if ($rollTime > $time) {
             $this->session->set(
                 'errorMessage',
-                //todo
                 'Nie możesz użyć kostki jeszcze przez ' . ($rollTime -$time) . ' sekund'
             );
             return false;

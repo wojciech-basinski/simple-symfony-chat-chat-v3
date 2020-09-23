@@ -5,7 +5,6 @@ namespace App\Utils;
 use App\Entity\Invite;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ChatConfig
@@ -59,14 +58,9 @@ class ChatConfig
      */
     private $auth;
 
-    /**
-     * @var int Bot Id
-     */
-    private const BOT_ID = 1;
-    /**
-     * @var int seconds in cooldown for roll for users
-     */
-    private const ROLL_COOL_DOWN = 30;
+    private int $botId;
+
+    private int $rollCoolDown;
 
     /**
      * @var int added to private channel id
@@ -89,10 +83,14 @@ class ChatConfig
 
     public function __construct(
         AuthorizationCheckerInterface $auth,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        int $rollCoolDown,
+        int $botId
     ) {
         $this->auth = $auth;
         $this->em = $em;
+        $this->rollCoolDown = $rollCoolDown;
+        $this->botId = $botId;
     }
 
     /**
@@ -115,7 +113,7 @@ class ChatConfig
 
     public function getBotId(): int
     {
-        return self::BOT_ID;
+        return $this->botId;
     }
 
     public static function getMyBB(): int
@@ -158,7 +156,7 @@ class ChatConfig
 
     public function getRollCoolDown(): int
     {
-        return self::ROLL_COOL_DOWN;
+        return $this->rollCoolDown;
     }
 
     private function specialChannels(): array
