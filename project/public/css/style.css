@@ -7,6 +7,10 @@ html, body {
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 #info-box {
     padding-top: 15px;
     height: 7%;
@@ -116,16 +120,16 @@ html, body {
     margin-right: 2px;
 }
 
-.disabled {
-    cursor: not-allowed;
-}
-
 .emoticon-img:hover {
     background: #1E69DE;
 }
 
 .kursor {
     cursor: pointer;
+}
+
+.disabled {
+    cursor: not-allowed;
 }
 
 .message-error {
@@ -280,7 +284,7 @@ html, body {
     padding: 0 6px;
 }
 
-#status, #sound, #scroll {
+.status, .sound, .scroll {
     margin-top: 5px;
     display: inline-block;
     width: 33px;
@@ -404,6 +408,15 @@ mark {
     background: #7F7C6A;
 }
 
-.modal-title, #modal-text{
+.modal-text {
     color: black;
+    text-align: center;
+}
+
+#root {
+    height: 100%
+}
+
+.modal.fade.show {
+    opacity: 100% !important;
 }

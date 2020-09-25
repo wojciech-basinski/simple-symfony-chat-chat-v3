@@ -1,0 +1,1 @@
+export const ROLL_IMG = require('../../../../img/emoticons/kostka.png').default;
