@@ -3,40 +3,31 @@
 namespace App\Utils\Messages;
 
 use App\Entity\User;
+use App\Utils\EmitMessage\EmitNewMessage;
 use App\Utils\Messages\Database\AddMessageToDatabase;
 use App\Utils\Messages\Transformers\NewLineTransformer;
 use App\Utils\Messages\Transformers\SpecialMessageAddTransformer;
 use App\Utils\Messages\Validator\AddMessageValidator;
 use App\Utils\Messages\Validator\UserAfkValidator;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use function htmlentities;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class AddMessage
 {
-    /**
-     * @var AddMessageValidator
-     */
-    private $addMessageValidator;
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    /**
-     * @var UserAfkValidator
-     */
-    private $userAfkValidator;
-    /**
-     * @var SpecialMessageAddTransformer
-     */
-    private $specialMessageAddTransformer;
-    /**
-     * @var AddMessageToDatabase
-     */
-    private $addMessageToDatabase;
-    /**
-     * @var NewLineTransformer
-     */
-    private $newLineTransformer;
+    private AddMessageValidator $addMessageValidator;
+
+    private SessionInterface $session;
+
+    private UserAfkValidator $userAfkValidator;
+
+    private SpecialMessageAddTransformer $specialMessageAddTransformer;
+
+    private AddMessageToDatabase $addMessageToDatabase;
+
+    private NewLineTransformer $newLineTransformer;
+
+    private EmitNewMessage $emitNewMessage;
 
     public function __construct(
         AddMessageValidator $addMessageValidator,
@@ -44,7 +35,8 @@ class AddMessage
         UserAfkValidator $userAfkValidator,
         SpecialMessageAddTransformer $specialMessageAddTransformer,
         AddMessageToDatabase $addMessageToDatabase,
-        NewLineTransformer $newLineTransformer
+        NewLineTransformer $newLineTransformer,
+        EmitNewMessage $emitNewMessage
     ) {
         $this->addMessageValidator = $addMessageValidator;
         $this->session = $session;
@@ -52,6 +44,7 @@ class AddMessage
         $this->specialMessageAddTransformer = $specialMessageAddTransformer;
         $this->addMessageToDatabase = $addMessageToDatabase;
         $this->newLineTransformer = $newLineTransformer;
+        $this->emitNewMessage = $emitNewMessage;
     }
 
     /**
@@ -63,10 +56,10 @@ class AddMessage
      *
      * @param int $channel
      *
-     * @return array status of adding messages, and new messages from last refresh
+     * @return JsonResponse
      * @throws \Exception
      */
-    public function addMessageToDatabase(User $user, string $text, int $channel): array
+    public function addMessageToDatabase(User $user, ?string $text, ?int $channel): JsonResponse
     {
         if ($this->validateMessage($user, $text, $channel) === false) {
             return $this->returnFail();
@@ -90,23 +83,27 @@ class AddMessage
         return $this->returnSuccess();
     }
 
-    private function returnFail(): array
+    private function returnFail(): JsonResponse
     {
-        return [
-            'status' => 'false',
-            'errorMessage' => $this->session->get('errorMessage')
-        ];
+        return (new JsonResponse())
+            ->setContent(json_encode([
+                'errorMessage' => $this->session->get('errorMessage')
+            ]))
+            ->setStatusCode(JsonResponse::HTTP_BAD_REQUEST);
     }
 
-    private function returnSuccess(): array
+    private function returnSuccess(): JsonResponse
     {
-        return [
-            'status' => 'true',
-        ];
+        return (new JsonResponse())
+            ->setStatusCode(JsonResponse::HTTP_OK);
     }
 
-    private function validateMessage(User $user, ?string $text, int $channel): bool
+    private function validateMessage(User $user, ?string $text, ?int $channel): bool
     {
+        if ($channel === null) {
+            $this->session->set('errorMessage', 'Brak podanego kanału');
+            return false;
+        }
         return $this->addMessageValidator->validateMessage($user, $channel, $text);
     }
 }

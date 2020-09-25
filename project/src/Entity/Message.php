@@ -95,6 +95,14 @@ class Message
         return $this->id;
     }
 
+    //this method is required to emit bot message by sockets
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function setUserId(int $userId): Message
     {
         $this->userId = $userId;

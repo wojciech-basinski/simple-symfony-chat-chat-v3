@@ -2,10 +2,13 @@
 
 namespace App\Repository;
 
+use App\Entity\Message;
 use App\Entity\User;
-use App\Utils\ChatConfig;
 use DateTime;
+use Doctrine\Common\EventManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
 
 class MessageRepository extends EntityRepository
 {
@@ -181,5 +184,17 @@ class MessageRepository extends EntityRepository
             ->setParameter('channel', $channel)
             ->setParameter('userId', $bot->getId())
             ->execute();
+
+        $message = (new Message())
+            ->setId((int) $this->_em->getConnection()->lastInsertId())
+            ->setIp($ip)
+            ->setText($text)
+            ->setChannel($channel)
+            ->setUserInfo($bot)
+            ->setDate(new DateTime())
+            ->setUserId($bot->getId());
+
+        $this->_em->getEventManager()
+            ->dispatchEvent(Events::postPersist, new LifecycleEventArgs($message, $this->_em));
     }
 }

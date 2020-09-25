@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Message;
+use App\Repository\MessageRepository;
+use App\Utils\Cache\GetBotUserFromCache;
 use App\Utils\Channel;
 use App\Utils\ChatConfig;
+use App\Utils\EmitMessage\EmitNewMessage;
 use App\Utils\Messages\AddMessage;
 use App\Utils\Messages\DeleteMessage;
 use App\Utils\Messages\MessageGetter;
@@ -23,27 +27,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ChatController extends Controller
 {
     /**
      * @Route("/chat/", name="chat_index")
-     *
-     * Show main window
-     *
-     * Get messages from last 24h and users online then show chat's main window,
-     * last messages and send variables to twig to configure var to jQuery
-     *
-     * @param Request $request
-     * @param UserOnline $userOnline
-     * @param Channel $channelService
-     * @param ChatConfig $config
-     * @param SessionInterface $session
-     *
-     * @return Response Return main page with all start information
-     *
-     * @throws \Exception
      */
     public function showAction(
         Request $request,
@@ -64,8 +53,6 @@ class ChatController extends Controller
             return $this->redirectToRoute('banned');
         }
         $response = new Response();
-//        /** @var EngineInterface $twig */
-//        $twig = $this->container->get('twig');
         $body = $twig->render('chat/index.html.twig', [
             'user' => $user,
             'user_channel' => $channel,
@@ -73,7 +60,8 @@ class ChatController extends Controller
             'locale' => $request->getLocale(),
             'botId' => $config->getBotId(),
             'channel' => $channel,
-            'privateChannelId' => $config->getUserPrivateMessageChannelId($user)
+            'privateChannelId' => $config->getUserPrivateMessageChannelId($user),
+            'privateMessageChannelId' => $config->getUserPrivateMessageChannelId($user)
         ]);
         $response->setContent($body);
         $response->headers->set('Access-Control-Allow-Origin', '*');//TODO array z youtueb
@@ -82,68 +70,58 @@ class ChatController extends Controller
     }
 
     /**
-     * @Route("/chat/add/", name="chat_add")
+     * @Route("/chat/add/", name="chat_add", methods={"POST"})
      *
      * Add new message
      *
      * Check if message can be added to database and get messages that was wrote between
      * last refresh and calling this method
-     *
-     * @param Request $request
-     * @param AddMessage $message
-     * @param SessionInterface $session
-     *
-     * @return JsonResponse returns status success or failure and new messages
      */
-    public function addAction(Request $request, AddMessage $message, SessionInterface $session): Response
+    public function addAction(Request $request, AddMessage $message): JsonResponse
     {
-        $messageText = $request->get('text');
+        $parameters = json_decode($request->getContent(), true);
+        $messageText = $parameters['text'] ?? null;
         $user = $this->getUser();
-        $channel = $session->get('channel');
+        $channel = $parameters['channel'] ?? null;
 
-        $status = $message->addMessageToDatabase($user, $messageText, $channel);
-        return $this->json($status);
+        $response = $message->addMessageToDatabase($user, $messageText, $channel);
+
+        return $response;
+
     }
 
     /**
-     * @Route("/chat/refresh/", name="chat_refresh")
-     *
-     * Refresh chat
-     *
-     * Get new messages from last refresh and get users online
-     *
-     * @param Request $request
-     * @param UserOnline $userOnlineService
-     * @param Channel $channel
-     * @param SessionInterface $session
-     * @param ChatConfig $config
-     * @param Translator $translator
-     * @param MessageGetter $messageGetter
-     *
-     * @return JsonResponse returns messages and users online
+     * @Route("chat/guwno")
      */
-    public function refreshAction(
+    public function guwno(GetBotUserFromCache $bot)
+    {
+        /** @var MessageRepository $repository */
+        $repository = $this->getDoctrine()->getRepository(Message::class);
+        $repository->addBotMessage('chuj', 1, $bot->getChatBotUser(), 'hasbgfkhjasf');
+
+        die;
+    }
+    /**
+     * @Route("/chat/initial/", name="chat_get_initial", methods={"POST"})
+     */
+    public function initialAction(
         Request $request,
         UserOnline $userOnlineService,
         Channel $channel,
         SessionInterface $session,
         ChatConfig $config,
-        Translator $translator,
+        TranslatorInterface $translator,
         MessageGetter $messageGetter
     ): Response {
-        //@todo refactor that shit fat method in controller
-        if ($request->request->get('chatIndex', null)) {
-            $messages = $messageGetter->getMessagesInIndex($this->getUser());
-        } else {
-            $messages = $messageGetter->getMessagesFromLastId($this->getUser());
-        }
-        $typing = $request->request->get('typing');
-        $typing = \in_array($typing, [0, 1]) ? $typing : 0;
+        $messages = $messageGetter->getMessagesInIndex($this->getUser());
+//
+//        $typing = $request->request->get('typing');
+//        $typing = \in_array($typing, [0, 1]) ? $typing : 0;
 
         $changeChannel = 0;
-        if ($userOnlineService->updateUserOnline($this->getUser(), $session->get('channel'), (bool) $typing)) {
-            return new JsonResponse(['banned']);
-        }
+//        if ($userOnlineService->updateUserOnline($this->getUser(), $session->get('channel'), (bool) $typing)) {
+//            return new JsonResponse(['banned']);
+//        }
 
         if (!$channel->checkIfUserCanBeOnThatChannel($this->getUser(), $session->get('channel'))) {
             $session->set('channel', 1);
@@ -151,11 +129,11 @@ class ChatController extends Controller
             $changeChannel = 1;
         }
 
-        $usersOnline = $userOnlineService
-            ->getOnlineUsers(
-                $this->getUser()->getId(),
-                $session->get('channel')
-            );
+//        $usersOnline = $userOnlineService
+//            ->getOnlineUsers(
+//                $this->getUser()->getId(),
+//                $session->get('channel')
+//            );
         $channels = [];
         foreach ($config->getChannels($this->getUser()) as $key => $value) {
             $channelNameTranslated = $translator->trans('channel.' . $value, [], 'chat', $translator->getLocale());
@@ -163,7 +141,7 @@ class ChatController extends Controller
         }
         $return = [
             'messages' => $messages,
-            'usersOnline' => $usersOnline,
+//            'usersOnline' => $usersOnline,
             'kickFromChannel' => $changeChannel,
             'channels' => $channels
         ];

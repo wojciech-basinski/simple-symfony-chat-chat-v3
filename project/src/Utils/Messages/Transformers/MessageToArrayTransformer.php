@@ -38,14 +38,14 @@ class MessageToArrayTransformer
 
         $returnedArray = [
             'id' => $message->getId(),
-            'user_id' => $message->getUserId(),
+            'userId' => $message->getUserInfo()->getId(),
             'date' => $message->getDate(),
             'text' => $text['showText'] ?? $message->getText(),
             'channel' => $message->getChannel(),
-            'username' => $message->getUsername(),
-            'user_role' => $message->getRole(),
+            'userName' => $message->getUsername(),
+            'userRole' => $message->getRole(),
             'privateMessage' => $text['privateMessage'] ?? 0,
-            'user_avatar' => $message->getUserAvatar()
+            'userAvatar' => $message->getUserAvatar()
         ];
 
         $textSplitted = explode(' ', $message->getText());
