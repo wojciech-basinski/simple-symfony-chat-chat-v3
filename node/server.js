@@ -11,20 +11,25 @@ var http_server = http.createServer(app).listen(3001);
 
 var io = socket.listen(http_server);
 
-var users = {};
+let users = {};
+let usersSocketId = {};
 
 io.sockets.on("connection", (socket) => {
     socket.on("refreshUsers", (data) => {
         if (!users[data.userName]) {
+            usersSocketId[data.userName] = {
+                socketId: socket.id
+            };
             users[data.userName] = {
                 userName : data.userName,
                 userRole : data.userName,
                 typing : data.typing,
-                afk: data.afk
+                afk: data.afk,
+                socketId: socket.id
             }
         }
         users[data.userName].timestamp = Date.now();
-        emitUsers()
+        emitUsers();
     });
     socket.on("room", (data) => {
         logger.info('SocketIO >Room ' + data);
@@ -45,6 +50,14 @@ io.sockets.on("connection", (socket) => {
         users[data.userName].typing = data.typing;
         emitUsers();
     });
+    socket.on("afk", (data) => {
+        console.log(data.userName, data.afk);
+        if (!users[data.userName]) {
+            return;
+        }
+        users[data.userName].afk = data.afk;
+        emitUsers();
+    });
 });
 
 (function checkTimestamp() {
@@ -54,12 +67,11 @@ io.sockets.on("connection", (socket) => {
     Object.keys(users).forEach(function (key) {
         if (users[key].timestamp <= timestamp) {
             delete users[key];
-            console.log('removed user');
+            delete usersSocketId[key];
             removedUsers++;
         }
     });
     if (removedUsers) {
-        console.log('emit users');
         emitUsers();
     }
 
