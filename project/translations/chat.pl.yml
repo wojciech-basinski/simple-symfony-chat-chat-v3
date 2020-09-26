@@ -63,3 +63,8 @@ error:
     cantBanAdmin: Nie możesz zbanować innego administratora
     errorOccured: Pojawił się błąd
     emptyPm: Tekst prywatnej wiadomości nie może być pusty
+    emptyMessage: Wiadomośc nie może być pusta
+    notLoggedIn: Nie możesz wysyłać wiadomości będąc nie zalogowanym
+    notPermittedChannel: Nie możesz pisać na tym kanale
+    messageStartedFromPm: Wiadomośc nie może zaczynać się od (pm)
+    messageStartedFromPw: Wiadomośc nie może zaczynać się od (pw)

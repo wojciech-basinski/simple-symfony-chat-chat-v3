@@ -10,7 +10,6 @@
                 userName: '{{ user.username }}',
                 userRole: '{{ user.getChatRoleAsText }}',
                 userId: {{ user.id }},
-                {#avatar: '{{ user.avatar }}',TODO zobaczyć czy to jest akurat potrzebne#}
             },
             channel: {{ channel }},
             privateChannelId: {{ privateChannelId }},
@@ -20,7 +19,6 @@
                 pl: '{{ url("homepage", {"_locale" : "pl"}) }}',
                 en: '{{ url("homepage", {"_locale" : "en"}) }}',
             },
-            changeChannelPath : '{{ url('change_channel_chat') }}',
             locale : '{{ locale }}',
             messageSounds : {
                 newMessageSound: '{{ asset('sound/sound_1.mp3') }}',

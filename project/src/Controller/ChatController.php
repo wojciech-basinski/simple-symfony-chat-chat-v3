@@ -2,21 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Message;
-use App\Repository\MessageRepository;
-use App\Utils\Cache\GetBotUserFromCache;
 use App\Utils\Channel;
 use App\Utils\ChatConfig;
-use App\Utils\EmitMessage\EmitNewMessage;
 use App\Utils\Messages\AddMessage;
 use App\Utils\Messages\DeleteMessage;
 use App\Utils\Messages\MessageGetter;
 use App\Utils\UserOnline;
-use ElephantIO\Client;
-use ElephantIO\Engine\SocketIO\Version2X;
-use Monolog\Logger;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -91,49 +82,26 @@ class ChatController extends Controller
     }
 
     /**
-     * @Route("chat/guwno")
-     */
-    public function guwno(GetBotUserFromCache $bot)
-    {
-        /** @var MessageRepository $repository */
-        $repository = $this->getDoctrine()->getRepository(Message::class);
-        $repository->addBotMessage('chuj', 1, $bot->getChatBotUser(), 'hasbgfkhjasf');
-
-        die;
-    }
-    /**
      * @Route("/chat/initial/", name="chat_get_initial", methods={"POST"})
      */
     public function initialAction(
         Request $request,
         UserOnline $userOnlineService,
-        Channel $channel,
+        Channel $channelUtil,
         SessionInterface $session,
         ChatConfig $config,
         TranslatorInterface $translator,
         MessageGetter $messageGetter
     ): Response {
-        $messages = $messageGetter->getMessagesInIndex($this->getUser());
-//
-//        $typing = $request->request->get('typing');
-//        $typing = \in_array($typing, [0, 1]) ? $typing : 0;
-
         $changeChannel = 0;
-//        if ($userOnlineService->updateUserOnline($this->getUser(), $session->get('channel'), (bool) $typing)) {
-//            return new JsonResponse(['banned']);
-//        }
-
-        if (!$channel->checkIfUserCanBeOnThatChannel($this->getUser(), $session->get('channel'))) {
-            $session->set('channel', 1);
-            $session->set('channelChanged', 1);
+        $parameters = json_decode($request->getContent(), true);
+        $channel = $parameters['channel'] ?? 1;
+        $canBeOnChannel = $channelUtil->checkIfUserCanBeOnThatChannel($this->getUser(), $channel);
+        if (!$canBeOnChannel) {
+            $channel = 1;
             $changeChannel = 1;
         }
-
-//        $usersOnline = $userOnlineService
-//            ->getOnlineUsers(
-//                $this->getUser()->getId(),
-//                $session->get('channel')
-//            );
+        $messages = $messageGetter->getMessages($this->getUser(), $channel);
         $channels = [];
         foreach ($config->getChannels($this->getUser()) as $key => $value) {
             $channelNameTranslated = $translator->trans('channel.' . $value, [], 'chat', $translator->getLocale());
@@ -141,7 +109,6 @@ class ChatController extends Controller
         }
         $return = [
             'messages' => $messages,
-//            'usersOnline' => $usersOnline,
             'kickFromChannel' => $changeChannel,
             'channels' => $channels
         ];
@@ -191,29 +158,6 @@ class ChatController extends Controller
         $userOnlineService->deleteUserWhenLogout($this->getUser()->getId());
 
         return $this->redirectToRoute('fos_user_security_logout');
-    }
-
-    /**
-     * @Route("/chat/channel", name="change_channel_chat")
-     *
-     * Change channel on chat
-     *
-     * Checking if channel exists and change user's channel in session
-     *
-     * @param Request $request A Request instance
-     * @param Channel $channelService
-     *
-     * @return JsonResponse returns status of changing channel
-     */
-    public function changeChannelAction(Request $request, Channel $channelService): Response
-    {
-        $channel = $request->request->get('channel');
-        if (!$channel) {
-            return $this->json('false');
-        }
-        $return = $channelService->changeChannelOnChat($this->getUser(), (int) $channel);
-
-        return $this->json($return);
     }
 
     /**

@@ -53,10 +53,7 @@ class ChatConfig
      */
     private const ELDERS_CHANNEL_ID = 6;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $auth;
+    private AuthorizationCheckerInterface $auth;
 
     private int $botId;
 
@@ -71,15 +68,10 @@ class ChatConfig
      * @var int added to private message channel id
      */
     private const PRIVATE_MESSAGE_ADD = 500000;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
 
-    /**
-     * @var null|array
-     */
-    private $invitations;
+    private EntityManagerInterface $em;
+
+    private ?array $invitations = null;
 
     public function __construct(
         AuthorizationCheckerInterface $auth,

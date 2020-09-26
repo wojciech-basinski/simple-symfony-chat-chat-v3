@@ -21,34 +21,19 @@ use function usort;
 
 class MessageGetter
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    /**
-     * @var ChatConfig
-     */
-    private $config;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var MessageToArrayTransformer
-     */
-    private $messageTransformer;
-    /**
-     * @var MessageDisplayValidator
-     */
-    private $messageDisplayValidator;
-    /**
-     * @var MessageRepository
-     */
-    private $messageRepository;
+    private EntityManagerInterface $em;
+
+    private SessionInterface $session;
+
+    private ChatConfig $config;
+
+    private LoggerInterface $logger;
+
+    private MessageToArrayTransformer $messageTransformer;
+
+    private MessageDisplayValidator $messageDisplayValidator;
+
+    private MessageRepository $messageRepository;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -70,17 +55,10 @@ class MessageGetter
     /**
      * Gets messages from last 24h limited by chat limit, than set id of last message to session
      * than change messages from entities to array
-     *
-     * @param User $user
-     *
-     * @return array Array of messages changed to array
-     * @throws NonUniqueResultException
      */
-    public function getMessagesInIndex(User $user): array
+    public function getMessages(User $user, int $channel): array
     {
-        $channel = $this->session->get('channel');
         $channelPrivateMessage = $this->config->getUserPrivateMessageChannelId($user);
-
         $messages = $this->messageRepository->getMessagesFromLastDay($channel, $channelPrivateMessage);
 
         $this->session->set(
@@ -91,64 +69,6 @@ class MessageGetter
         $messages = $this->messageTransformer->transformMessagesToArray($messages);
 
         return $this->messageDisplayValidator->checkIfMessagesCanBeDisplayed($messages, $user);
-    }
-
-    /**
-     * Gets messages from database from last id read from session,
-     * then set id of last message to session if any message exists,
-     * than change messages from entitys to array and checking if messages can be displayed
-     *
-     * @param User $user
-     *
-     * @return array Array of messages changed to array
-     * @throws NonUniqueResultException
-     */
-    public function getMessagesFromLastId(User $user): array
-    {
-        $lastId = $this->session->get('lastId');
-        //only when channel was changed
-        if ($this->session->get('changedChannel')) {
-            $this->session->remove('changedChannel');
-            return $this->getMessagesAfterChangingChannel($user);
-        }
-
-        $messages = $this->messageRepository->getMessagesFromLastId(
-            $lastId,
-            $this->config->getPrivateMessageAdd(),
-            $this->config->getUserPrivateMessageChannelId($user)
-        );
-
-        //if get new messages, update var lastId in session
-        if (end($messages)) {
-            $this->session->set('lastId', end($messages)->getId());
-        }
-        $messages = $this->messageTransformer->transformMessagesToArray($messages);
-
-        $messagesToDisplay = $this->messageDisplayValidator->checkIfMessagesCanBeDisplayed($messages, $user);
-        usort($messagesToDisplay, static function ($a, $b): int {
-            return $a <=> $b;
-        });
-
-        return $messagesToDisplay;
-    }
-
-    /**
-     * Gets messages from last 24h from new channel, then set id of last message to session if any message exists,
-     * than change messages from entitys to array and checking if messages can be displayed
-     *
-     * @param User $user Current user
-     *
-     * @return array Array of messages changed to array
-     * @throws NonUniqueResultException
-     */
-    private function getMessagesAfterChangingChannel(User $user): array
-    {
-        $messages = $this->getMessagesInIndex($user);
-        usort($messages, static function ($a, $b): int {
-            return $a <=> $b;
-        });
-
-        return $messages;
     }
 
     private function initializeRepository(): void

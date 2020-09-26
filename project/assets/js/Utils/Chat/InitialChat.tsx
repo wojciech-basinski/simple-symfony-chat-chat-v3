@@ -1,6 +1,10 @@
 import React from 'react';
 
-async function initialChat(path: string): Promise<any> {
+async function initialChat(path: string, channel: number = 0): Promise<any> {
+    let body = {
+        channel: channel
+    };
+
     async function postData(url = '', data = {}) {
         const response = await fetch(url, {
             method: 'POST',
@@ -8,11 +12,12 @@ async function initialChat(path: string): Promise<any> {
             headers: {
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify(data)
         });
         return response.json();
     }
 
-    return postData(path/*, body*/);
+    return postData(path, body);
 }
 
 export default initialChat;

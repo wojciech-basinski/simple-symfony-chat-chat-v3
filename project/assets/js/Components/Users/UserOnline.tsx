@@ -4,6 +4,7 @@ interface IProps {
     userName: string;
     userRole: string;
     typing: boolean;
+    afk: boolean;
 }
 
 class UserOnline extends React.Component<IProps, any> {
@@ -13,7 +14,11 @@ class UserOnline extends React.Component<IProps, any> {
 
     render() {
         return (
-            <div className={this.props.userRole + ' text-in-info'} id="username">{this.props.userName}{this.props.typing ? '(...)' : null}</div>
+            <div className={this.props.userRole + ' text-in-info'} id="username">
+                {this.props.userName}
+                {this.props.typing ? '(...)' : null}
+                {this.props.afk ? '(afk)' : null}
+            </div>
         );
     }
 }

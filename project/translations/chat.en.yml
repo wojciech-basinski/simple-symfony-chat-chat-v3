@@ -63,3 +63,8 @@ error:
     cantBanAdmin: You cannot ban administator
     errorOccured: An error occured
     emptyPm: Private message text cannot be empty
+    emptyMessage: Message cannot be empty
+    notLoggedIn: You cannot send message if you are not logged in
+    notPermittedChannel: You cannot send message to this channel
+    messageStartedFromPm: Message cannot starts from (pm)
+    messageStartedFromPw: Message cannot starts from (pw)

@@ -9,6 +9,7 @@ interface IProps {
     channels: any;
     channel: number;
     users: {};
+    changeChannel(par1: number): void;
 }
 
 class UsersList extends React.Component<IProps, any> {
@@ -25,7 +26,7 @@ class UsersList extends React.Component<IProps, any> {
         let props = this.props;
         const channelsList = this.props.channels;
         Object.keys(channelsList).forEach(function (key, i) {
-            channelList[i] = <Channel name={channelsList[key]} channelKey={parseInt(key)} key={key} channel={props.channel}/>;
+            channelList[i] = <Channel name={channelsList[key]} channelKey={parseInt(key)} key={key} channel={props.channel} handleClick={props.changeChannel}/>;
         });
         return channelList;
     }
@@ -34,10 +35,10 @@ class UsersList extends React.Component<IProps, any> {
         const usersList:any[] = [];
         const users = this.props.users;
         const user = this.props.user;
-        usersList[0] = <UserOnline typing={false} userName={user.userName} key={user.userName} userRole={user.userRole} />;
+        usersList[0] = <UserOnline afk={false} typing={false} userName={user.userName} key={user.userName} userRole={user.userRole} />;
         Object.keys(users).forEach(function (key, i) {
             if (user.userName !== users[key].userName) {
-                usersList[i+1] = <UserOnline typing={users[key].typing} userName={users[key].userName} key={users[key].userName} userRole={users[key].userRole} />;
+                usersList[i+1] = <UserOnline afk={users[key].afk} typing={users[key].typing} userName={users[key].userName} key={users[key].userName} userRole={users[key].userRole} />;
             }
         });
         return usersList;

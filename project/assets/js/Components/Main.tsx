@@ -37,7 +37,7 @@ interface IState {
 }
 
 class Main extends React.Component<any, IState> {
-    private socket:socketIOClient = socketIOClient(SOCKET_PATH);
+    private socket:socketIOClient;
     private newMessagesCount:number = 0;
     private documentTitle: string = document.title;
     constructor(props: any) {
@@ -78,7 +78,7 @@ class Main extends React.Component<any, IState> {
         this.handleChangeScroll = this.handleChangeScroll.bind(this);
         this.saveSettingsInLocalStorage = this.saveSettingsInLocalStorage.bind(this);
         this.refreshUserOnSocket = this.refreshUserOnSocket.bind(this);
-        this.sockets();
+        this.changeChannel = this.changeChannel.bind(this);
     }
 
     refreshUserOnSocket() {
@@ -88,20 +88,21 @@ class Main extends React.Component<any, IState> {
             "typing": this.state.typing,
             "afk": this.state.afk
         });
-        console.log("refresh");
         setTimeout(this.refreshUserOnSocket, 60000);
     }
 
-    sockets() {
-        this.socket.on("connect", () => {
-            this.socket.emit("room", [
-                1
-            ]);
+    sockets(channels:{}) {
+        this.socket = socketIOClient(SOCKET_PATH);
+        this.socket.on("connect", (data) => {
+            Object.keys(channels).forEach((key) => {
+                this.socket.emit("room", [
+                    key
+                ]);
+            });
             this.socket.emit("room", [
                 this.props.props.privateMessageChannelId
             ]);
             this.refreshUserOnSocket();
-
         });
         this.socket.on("users", (data) => {
             this.setState({
@@ -110,28 +111,33 @@ class Main extends React.Component<any, IState> {
         });
         this.socket.on("message", (data: IMessage) => {
             //change channel!!!!
-            if (!this.state.isWindowInFocus) {
-                this.newMessagesCount++;
-                document.title = '(' + this.newMessagesCount + ') ' + this.documentTitle;
-                if (Notification.permission === "granted") {
-                    const username = data.userName;
-                    const messageText = data.text;
-                    const notification = new Notification(username, {'body': messageText});
-                    setTimeout(notification.close.bind(notification), 5000);
+            if (data.channel === this.state.channel || data.channel === this.props.props.privateMessageChannelId) {
+                if (!this.state.isWindowInFocus) {
+                    this.newMessagesCount++;
+                    document.title = '(' + this.newMessagesCount + ') ' + this.documentTitle;
+                    if (Notification.permission === "granted") {
+                        const username = data.userName;
+                        const messageText = data.text;
+                        const notification = new Notification(username, {'body': messageText});
+                        setTimeout(notification.close.bind(notification), 5000);
+                    }
                 }
-            }
-            this.setState((prevState) => {
-                const newMessages = prevState.messages;
                 if (data.userId !== this.state.user.userId) {
                     if (this.state.settings.sound) {
                         playSound(this.props.props.messageSounds.newMessageSound);
                     }
                 }
-                newMessages[newMessages.length] = data;
+                this.setState((prevState) => {
+                    const newMessages = prevState.messages;
+                    newMessages[newMessages.length] = data;
                     return {
                         messages: newMessages
                     }
                 });
+            } else {
+                //todo info o wiadomości na innym kanale
+            }
+
         });
         //channele do których dołączono
         //sockety todo
@@ -140,17 +146,19 @@ class Main extends React.Component<any, IState> {
     componentDidMount(): void {
         window.addEventListener('blur', () => {
             this.setState({
-                isWindowInFocus: false
+                isWindowInFocus: false,
+                afk: true
             });
-            //set afk
+            this.sendAfkStatus(true);
         });
         window.addEventListener('focus', () => {
             this.setState({
-                isWindowInFocus: true
+                isWindowInFocus: true,
+                afk: false
             });
+            this.sendAfkStatus(false);
             this.newMessagesCount = 0;
             document.title = this.documentTitle;
-            //set return from afk
         });
 
         initialChat(this.props.props.initialPath)
@@ -162,6 +170,7 @@ class Main extends React.Component<any, IState> {
                         status: 'ok'
                     }
                 );
+                this.sockets(data.channels);
             });
         this.initialSettings();
     }
@@ -169,6 +178,30 @@ class Main extends React.Component<any, IState> {
     // componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<IState>, snapshot?: any): void {
     //     console.log(this.state.isWindowInFocus);
     // }
+
+    sendAfkStatus(status: boolean) {
+        this.socket.emit("afk", {
+            userName: this.state.user.userName,
+            afk: status
+        });
+    }
+
+    changeChannel(channel: number):void {
+        this.setState({
+            channel: channel
+        });
+        initialChat(this.props.props.initialPath, channel)
+            .then(data => {
+                this.setState({
+                        channels: data.channels,
+                        messages: data.messages,
+                        chatInitialized: true,
+                        status: 'ok'
+                    }
+                );
+            });
+        console.log('channel clicked', channel);
+    }
 
     initialSettings(): void {
         const settings = localStorage.getItem('settings');
@@ -240,7 +273,7 @@ class Main extends React.Component<any, IState> {
             return;
         }
         let messageText = message !== undefined ? message : this.state.messageText.trim();
-        let errorMessage = sendMessage(messageText, this.props.props.sendPath, this.state.user, this.props.props.channel);
+        let errorMessage = sendMessage(messageText, this.props.props.sendPath, this.state.user, this.state.channel);
         errorMessage.then(data => {
            if (data.errorMessage !== undefined) {
                this.toggleModal(data.errorMessage);
@@ -326,7 +359,7 @@ class Main extends React.Component<any, IState> {
             <div className="row chat" id="chat-row-main">
                 <ErrorModal modal={this.state.modal} toggleModal={this.toggleModal} message={this.state.modalMessage}/>
                 <MessagesBox messages={this.state.messages} user={this.state.user} insertPm={this.insertPm} insertNick={this.insertNick}/>
-                <UsersList users={this.state.usersOnline} locale={this.state.locale} user={this.state.user} channels={this.state.channels} channel={this.state.channel}/>
+                <UsersList changeChannel={this.changeChannel} users={this.state.usersOnline} locale={this.state.locale} user={this.state.user} channels={this.state.channels} channel={this.state.channel}/>
                 <EmoticonsList handleEmoticonClick={this.handleAddEmoticonToMessageText} handleRollClick={this.sendRoll} rollDisabled={this.state.rollDisabled}/>
                 <SettingsList status={this.state.status} settings={this.state.settings} handleChangeScroll={this.handleChangeScroll} handleChangeSound={this.handleChangeSound}/>
                 <BbCodeTable onBbCodeClick={this.handleAddBbCodeToMessageText}/>

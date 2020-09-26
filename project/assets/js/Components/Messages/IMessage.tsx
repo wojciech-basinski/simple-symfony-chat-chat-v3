@@ -7,4 +7,5 @@ export default interface IMessage {
     userRole: string,
     userAvatar: string,
     privateMessage: boolean,
+    channel: number,
 }

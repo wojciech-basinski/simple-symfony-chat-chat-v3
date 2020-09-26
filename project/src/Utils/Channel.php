@@ -8,22 +8,13 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class Channel
 {
-    /**
-     * @var ChatConfig
-     */
-    private $config;
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    /**
-     * @var UserOnline
-     */
-    private $userOnline;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private ChatConfig $config;
+
+    private SessionInterface $session;
+
+    private UserOnline $userOnline;
+
+    private LoggerInterface $logger;
 
     /**
      * Channel constructor.
@@ -43,29 +34,6 @@ class Channel
         $this->session = $session;
         $this->userOnline = $userOnline;
         $this->logger = $logger;
-    }
-
-    /**
-     * Check if channel exists and then update User's information in session and users online in database
-     * about User's channel
-     *
-     * @param User $user User instance
-     *
-     * @param int $channel channel's Id
-     *
-     * @return bool status of changing channel
-     */
-    public function changeChannelOnChat(User $user, int $channel): bool
-    {
-        if (!$this->checkIfUserCanBeOnThatChannel($user, $channel)) {
-            return false;
-        }
-        $this->userOnline->updateUserOnline($user, $channel, false);
-
-        $this->session->set('channel', $channel);
-        $this->session->set('changedChannel', 1);
-
-        return true;
     }
 
     public function checkIfUserCanBeOnThatChannel(User $user, ?int $channel): bool

@@ -4,6 +4,7 @@ namespace App\Utils\Messages\Validator;
 
 use App\Entity\User;
 use App\Utils\ChatConfig;
+use Symfony\Component\Translation\TranslatorInterface;
 use function array_key_exists;
 use function strlen;
 use function strpos;
@@ -13,19 +14,18 @@ use function trim;
 
 class AddMessageValidator
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    /**
-     * @var ChatConfig
-     */
-    private $config;
 
-    public function __construct(SessionInterface $session, ChatConfig $config)
+    private SessionInterface $session;
+
+    private ChatConfig $config;
+
+    private TranslatorInterface $translator;
+
+    public function __construct(SessionInterface $session, ChatConfig $config, TranslatorInterface $translator)
     {
         $this->session = $session;
         $this->config = $config;
+        $this->translator = $translator;
     }
 
     /**
@@ -42,28 +42,64 @@ class AddMessageValidator
     public function validateMessage(User $user, int $channel, ?string $text): bool
     {
         if ($text === null) {
-            $this->session->set('errorMessage', 'Wiadomośc nie może być pusta');
+            $errorMessage = $this->translator->trans(
+                'error.emptyMessage',
+                [],
+                'chat',
+                $this->translator->getLocale()
+            );
+            $this->session->set('errorMessage', $errorMessage);
             return false;
         }
         $text = strtolower(trim($text));
         if (strlen($text) <= 0) {
-            $this->session->set('errorMessage', 'Wiadomośc nie może być pusta');
+            $errorMessage = $this->translator->trans(
+                'error.emptyMessage',
+                [],
+                'chat',
+                $this->translator->getLocale()
+            );
+            $this->session->set('errorMessage', $errorMessage);
             return false;
         }
         if ($user->getId() <= 0) {
-            $this->session->set('errorMessage', 'Nie możesz wysyłać wiadomości będąc nie zalogowanym');
+            $errorMessage = $this->translator->trans(
+                'error.notLoggedIn',
+                [],
+                'chat',
+                $this->translator->getLocale()
+            );
+            $this->session->set('errorMessage', $errorMessage);
             return false;
         }
         if (!array_key_exists($channel, $this->config->getChannels($user))) {
-            $this->session->set('errorMessage', 'Nie możesz pisać na tym kanale');
+            $errorMessage = $this->translator->trans(
+                'error.notPermittedChannel',
+                [],
+                'chat',
+                $this->translator->getLocale()
+            );
+            $this->session->set('errorMessage', $errorMessage);
             return false;
         }
         if (strpos($text, '(pm)') === 0) {
-            $this->session->set('errorMessage', 'Wiadomośc nie może zaczynać się od (pm)');
+            $errorMessage = $this->translator->trans(
+                'error.messageStartedFromPm',
+                [],
+                'chat',
+                $this->translator->getLocale()
+            );
+            $this->session->set('errorMessage', $errorMessage);
             return false;
         }
         if (strpos($text, '(pw)') === 0) {
-            $this->session->set('errorMessage', 'Wiadomośc nie może zaczynać się od (pw)');
+            $errorMessage = $this->translator->trans(
+                'error.messageStartedFromPw',
+                [],
+                'chat',
+                $this->translator->getLocale()
+            );
+            $this->session->set('errorMessage', $errorMessage);
             return false;
         }
         return true;

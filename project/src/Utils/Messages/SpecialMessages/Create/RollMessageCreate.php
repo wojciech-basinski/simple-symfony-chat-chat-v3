@@ -11,18 +11,11 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class RollMessageCreate implements SpecialMessageAdd
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    /**
-     * @var ChatConfig
-     */
-    private $config;
-    /**
-     * @var AddMessageToDatabase
-     */
-    private $addMessageToDatabase;
+    private SessionInterface $session;
+
+    private ChatConfig $config;
+
+    private AddMessageToDatabase $addMessageToDatabase;
 
     public function __construct(
         SessionInterface $session,

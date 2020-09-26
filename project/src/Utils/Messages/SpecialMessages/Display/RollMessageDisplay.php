@@ -7,14 +7,9 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class RollMessageDisplay implements SpecialMessageDisplay
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-    /**
-     * @var ChatConfig
-     */
-    private $config;
+    private TranslatorInterface $translator;
+
+    private ChatConfig $config;
 
     public function __construct(TranslatorInterface $translator, ChatConfig $config)
     {
