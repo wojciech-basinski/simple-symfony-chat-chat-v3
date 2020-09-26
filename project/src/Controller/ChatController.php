@@ -37,7 +37,6 @@ class ChatController extends Controller
         $channel = $session->get('channel');
         if (!$channelService->checkIfUserCanBeOnThatChannel($user, $channel)) {
             $channel = 1;
-            $session->set('channel', 1);
         }
 
         if ($userOnline->updateUserOnline($user, $channel, false)) {
