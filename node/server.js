@@ -15,33 +15,30 @@ let users = {};
 let usersSocketId = {};
 
 io.sockets.on("connection", (socket) => {
-    socket.on("refreshUsers", (data) => {
+    socket.on("connectUser", (data) => {
         if (!users[data.userName]) {
-            usersSocketId[data.userName] = {
-                socketId: socket.id
-            };
+            usersSocketId[socket.id] = data.userName;
             users[data.userName] = {
                 userName : data.userName,
                 userRole : data.userName,
                 typing : data.typing,
-                afk: data.afk,
-                socketId: socket.id
+                afk: data.afk
             }
         }
-        users[data.userName].timestamp = Date.now();
         emitUsers();
     });
     socket.on("room", (data) => {
-        logger.info('SocketIO >Room ' + data);
         //check permissions in php how? api with jwt?
         socket.join(data);
     });
     socket.on("new_message", (data) => {
-        logger.info('new message ' + data);
         io.sockets.in(data.channel).emit("message", data.message);
     });
-    socket.on("disconnect", (data) => {
-        logger.info("disconnected");
+    socket.on("disconnect", () => {
+        let key = usersSocketId[socket.id];
+        delete users[key];
+        delete usersSocketId[key];
+        emitUsers();
     });
     socket.on("typing", (data) => {
         if (!users[data.userName]) {
@@ -51,7 +48,6 @@ io.sockets.on("connection", (socket) => {
         emitUsers();
     });
     socket.on("afk", (data) => {
-        console.log(data.userName, data.afk);
         if (!users[data.userName]) {
             return;
         }
@@ -59,24 +55,6 @@ io.sockets.on("connection", (socket) => {
         emitUsers();
     });
 });
-
-(function checkTimestamp() {
-    logger.info('checked timestamps');
-    const timestamp = Date.now() - 180000;
-    let removedUsers = 0;
-    Object.keys(users).forEach(function (key) {
-        if (users[key].timestamp <= timestamp) {
-            delete users[key];
-            delete usersSocketId[key];
-            removedUsers++;
-        }
-    });
-    if (removedUsers) {
-        emitUsers();
-    }
-
-    setTimeout(checkTimestamp, 180000);
-})();
 
 function emitUsers() {
     io.sockets.emit("users", users);
