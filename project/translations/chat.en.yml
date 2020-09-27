@@ -25,12 +25,10 @@ bbcode:
 
 channel:
     Default: Default
-    Channel 2: Channel 2
+    Other: Other
     Private: Private
     Moderator: Moderator
     Admin: Administrator
-    Elders: Elders
-    Shiny: Shiny
 
 chat:
     roll: rolls dice chat.dice and gets

@@ -1,9 +1,10 @@
 import React from "react";
 import createDate from "../../Utils/Date/createDate";
-import ChatMessageSameUser from "./ChatMessageSameUser";
-import ChatMessageNewUser from "./ChatMessageNewUser";
 import User from "../Users/User";
 import IMessage from "./IMessage";
+import Message from "./Message";
+import MessagePresentation from "./MessagePresentation";
+import MessageGroup from "./MessageGroup";
 
 interface IProps {
     messages: IMessage[];
@@ -32,20 +33,29 @@ class MessagesTable extends React.Component<IProps, any> {
         let messageList:any[] = [];
         let messagesList = this.props.messages;
         const user = this.props.user;
-        let lastUserId = 0;
+        let lastUserId:number = 0;
         let that = this;
+        let group:any[] = [];
+        let lastMessageId:number = 0;
         Object.keys(messagesList).forEach(function (key, i, channels) {
             const date = createDate(messagesList[i].date.date);
-            const canDelete = (user.userRole === 'administrator' || user.userRole === 'moderator' || user.userRole === 'elders' || user.userRole === 'demotywatorking');
+            const canDelete = (user.userRole === 'administrator' || user.userRole === 'moderator');
             const isPm = (messagesList[i].privateMessage);
             const canPmToUser = (messagesList[i].userName !== user.userName);
             if (lastUserId === messagesList[i].userId) {
-                messageList[i] = <ChatMessageSameUser user={user} key={messagesList[i].id} message={messagesList[i]} canDelete={canDelete} isPm={isPm} date={date}/>;
+                group.push(<Message user={user} key={messagesList[i].id} message={messagesList[i]} canDelete={canDelete} isPm={isPm} date={date}/>);
             } else {
-                messageList[i] = <ChatMessageNewUser user={user} insertNick={that.insertNick} insertPm={that.insertPm} key={messagesList[i].id} message={messagesList[i]} canDelete={canDelete} isPm={isPm} date={date} canPmToUser={canPmToUser}/>;
+                messageList.push(<MessageGroup key={messagesList[i].id} userId={lastUserId}>{group}</MessageGroup>);
+                group = [];
+                group.push(<MessagePresentation insertNick={that.insertNick} insertPm={that.insertPm} user={user} canPmToUser={canPmToUser} key={messagesList[i].id} message={messagesList[i]} canDelete={canDelete} isPm={isPm} date={date}/>);
+            }
+            if (!group.length) {
+                messageList.push(<MessageGroup key={messagesList[i].id} userId={lastUserId}>{group}</MessageGroup>);
             }
             lastUserId = messagesList[i].userId;
+            lastMessageId = messagesList[i].id;
         });
+        messageList.push(<MessageGroup key={lastMessageId} userId={lastUserId}>{group}</MessageGroup>);
         return messageList;
     }
 

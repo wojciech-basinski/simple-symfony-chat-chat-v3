@@ -33,7 +33,8 @@ interface IState {
     status: string,
     typing: boolean,
     usersOnline: {},
-    afk: boolean
+    afk: boolean,
+    messagesOnOtherChannels: {};
 }
 
 class Main extends React.Component<any, IState> {
@@ -61,7 +62,8 @@ class Main extends React.Component<any, IState> {
             status: 'in-progress',
             typing: false,
             usersOnline:{},
-            afk: false
+            afk: false,
+            messagesOnOtherChannels: {}
         };
         this.handleAddBbCodeToMessageText = this.handleAddBbCodeToMessageText.bind(this);
         this.handleChangeMessageText = this.handleChangeMessageText.bind(this);
@@ -77,18 +79,17 @@ class Main extends React.Component<any, IState> {
         this.handleChangeSound = this.handleChangeSound.bind(this);
         this.handleChangeScroll = this.handleChangeScroll.bind(this);
         this.saveSettingsInLocalStorage = this.saveSettingsInLocalStorage.bind(this);
-        this.refreshUserOnSocket = this.refreshUserOnSocket.bind(this);
+        this.connectUserOnSocket = this.connectUserOnSocket.bind(this);
         this.changeChannel = this.changeChannel.bind(this);
     }
 
-    refreshUserOnSocket() {
-        this.socket.emit("refreshUsers", {
+    connectUserOnSocket() {
+        this.socket.emit("connectUser", {
             "userRole": this.state.user.userRole,
             "userName": this.state.user.userName,
             "typing": this.state.typing,
             "afk": this.state.afk
         });
-        setTimeout(this.refreshUserOnSocket, 60000);
     }
 
     sockets(channels:{}) {
@@ -102,7 +103,7 @@ class Main extends React.Component<any, IState> {
             this.socket.emit("room", [
                 this.props.props.privateMessageChannelId
             ]);
-            this.refreshUserOnSocket();
+            this.connectUserOnSocket();
         });
         this.socket.on("users", (data) => {
             this.setState({
@@ -110,7 +111,6 @@ class Main extends React.Component<any, IState> {
             });
         });
         this.socket.on("message", (data: IMessage) => {
-            //change channel!!!!
             if (data.channel === this.state.channel || data.channel === this.props.props.privateMessageChannelId) {
                 if (!this.state.isWindowInFocus) {
                     this.newMessagesCount++;
@@ -135,12 +135,21 @@ class Main extends React.Component<any, IState> {
                     }
                 });
             } else {
-                //todo info o wiadomości na innym kanale
+                let key = data.channel;
+                this.setState((prevState) => {
+                    let messages = prevState.messagesOnOtherChannels;
+                    if (messages[key] === undefined) {
+                        messages[key] = 1;
+                    } else {
+                        messages[key] = messages[key] + 1
+                    }
+                    return {
+                        messagesOnOtherChannels: messages
+                    }
+                });
             }
 
         });
-        //channele do których dołączono
-        //sockety todo
     }
 
     componentDidMount(): void {
@@ -175,10 +184,6 @@ class Main extends React.Component<any, IState> {
         this.initialSettings();
     }
 
-    // componentDidUpdate(prevProps: Readonly<any>, prevState: Readonly<IState>, snapshot?: any): void {
-    //     console.log(this.state.isWindowInFocus);
-    // }
-
     sendAfkStatus(status: boolean) {
         this.socket.emit("afk", {
             userName: this.state.user.userName,
@@ -187,8 +192,13 @@ class Main extends React.Component<any, IState> {
     }
 
     changeChannel(channel: number):void {
-        this.setState({
-            channel: channel
+        this.setState((prevState) => {
+            let messagesOnOtherChannels = prevState.messagesOnOtherChannels;
+            messagesOnOtherChannels[channel] = 0;
+            return {
+                channel: channel,
+                messagesOnOtherChannels: messagesOnOtherChannels
+            }
         });
         initialChat(this.props.props.initialPath, channel)
             .then(data => {
@@ -359,7 +369,7 @@ class Main extends React.Component<any, IState> {
             <div className="row chat" id="chat-row-main">
                 <ErrorModal modal={this.state.modal} toggleModal={this.toggleModal} message={this.state.modalMessage}/>
                 <MessagesBox messages={this.state.messages} user={this.state.user} insertPm={this.insertPm} insertNick={this.insertNick}/>
-                <UsersList changeChannel={this.changeChannel} users={this.state.usersOnline} locale={this.state.locale} user={this.state.user} channels={this.state.channels} channel={this.state.channel}/>
+                <UsersList messagesOnOtherChannels={this.state.messagesOnOtherChannels} changeChannel={this.changeChannel} users={this.state.usersOnline} locale={this.state.locale} user={this.state.user} channels={this.state.channels} channel={this.state.channel}/>
                 <EmoticonsList handleEmoticonClick={this.handleAddEmoticonToMessageText} handleRollClick={this.sendRoll} rollDisabled={this.state.rollDisabled}/>
                 <SettingsList status={this.state.status} settings={this.state.settings} handleChangeScroll={this.handleChangeScroll} handleChangeSound={this.handleChangeSound}/>
                 <BbCodeTable onBbCodeClick={this.handleAddBbCodeToMessageText}/>

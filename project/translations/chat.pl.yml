@@ -25,12 +25,10 @@ bbcode:
 
 channel:
     Default: Domyślny
-    Channel 2: Kanał 2
+    Other: Inne
     Private: Prywatny
     Moderator: Moderator
     Admin: Administrator
-    Elders: Starsi
-    Shiny: Shiny
 
 chat:
     roll: rzuca kostką chat.dice i otrzymuje wyniki

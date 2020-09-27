@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Main from "./Components/Main";
 import User from "./Components/Users/User";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 declare global {
     interface Window {

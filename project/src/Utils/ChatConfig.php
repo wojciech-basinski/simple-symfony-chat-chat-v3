@@ -20,7 +20,8 @@ class ChatConfig
      */
     private const DEFAULT_CHANNELS = [
         1 => 'Default',
-        7 => 'Pokemon Go'
+        2 => 'Other',
+        5 => 'Test'
     ];
 
     /**
@@ -42,16 +43,6 @@ class ChatConfig
      * @var int admin channel id
      */
     private const ADMIN_CHANNEL_ID = 4;
-
-    /**
-     * @var int shiny channel id
-     */
-    private const SHINY_CHANNEL_ID = 5;
-
-    /**
-     * @var int elders channel id
-     */
-    private const ELDERS_CHANNEL_ID = 6;
 
     private AuthorizationCheckerInterface $auth;
 
@@ -125,7 +116,7 @@ class ChatConfig
 
     public function getUserPrivateChannel(User $user): array
     {
-        $channelId = self::PRIVATE_CHANNEL_ADD + $user->getId();
+        $channelId = $this->getUserPrivateChannelId($user);
         return [
             $channelId => 'Private'
         ];
@@ -160,10 +151,6 @@ class ChatConfig
         if ($this->auth->isGranted('ROLE_MODERATOR')) {
             $array[self::MODERATOR_CHANNEL_ID] = $this->getChannelName(self::MODERATOR_CHANNEL_ID);
         }
-        $array[self::SHINY_CHANNEL_ID] = $this->getChannelName(self::SHINY_CHANNEL_ID);
-        if ($this->auth->isGranted('ROLE_ELDERS')) {
-            $array[self::ELDERS_CHANNEL_ID] = $this->getChannelName(self::ELDERS_CHANNEL_ID);
-        }
         return $array;
     }
 
@@ -197,10 +184,6 @@ class ChatConfig
                 return 'Admin';
             case self::MODERATOR_CHANNEL_ID:
                 return 'Moderator';
-            case self::SHINY_CHANNEL_ID:
-                return 'Shiny';
-            case self::ELDERS_CHANNEL_ID:
-                return 'Elders';
             default:
                 return $this->getUserPrivateChannelName($id);
         }

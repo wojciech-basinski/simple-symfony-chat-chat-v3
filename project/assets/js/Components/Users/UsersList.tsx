@@ -10,6 +10,7 @@ interface IProps {
     channel: number;
     users: {};
     changeChannel(par1: number): void;
+    messagesOnOtherChannels: {};
 }
 
 class UsersList extends React.Component<IProps, any> {
@@ -26,7 +27,7 @@ class UsersList extends React.Component<IProps, any> {
         let props = this.props;
         const channelsList = this.props.channels;
         Object.keys(channelsList).forEach(function (key, i) {
-            channelList[i] = <Channel name={channelsList[key]} channelKey={parseInt(key)} key={key} channel={props.channel} handleClick={props.changeChannel}/>;
+            channelList[i] = <Channel messages={props.messagesOnOtherChannels[key]} name={channelsList[key]} channelKey={parseInt(key)} key={key} channel={props.channel} handleClick={props.changeChannel}/>;
         });
         return channelList;
     }
