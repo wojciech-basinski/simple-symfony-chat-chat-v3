@@ -18,8 +18,6 @@ class UsersList extends React.Component<IProps, any> {
     constructor(props: IProps) {
         super(props);
         this.user = props.user;
-        this.channels = this.channels.bind(this);
-        this.usersOnline = this.usersOnline.bind(this);
     }
 
     channels() {

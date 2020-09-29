@@ -6,26 +6,21 @@ interface IProps {
     sendMessage: (par1?: string | undefined) => void
 }
 
-interface IState {
-}
-
-class Message extends React.Component<IProps, IState> {
+class Message extends React.Component<IProps, any> {
     constructor(props: IProps) {
         super(props);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleKeyPress = this.handleKeyPress.bind(this);
     }
 
-    handleChange(e):void {
+    handleChange = (e):void => {
         this.props.handleChange(e.target.value);
-    }
+    };
 
-    handleKeyPress(e) {
+    handleKeyPress = (e): void => {
         if (e.which == 13 && !e.shiftKey) {
             e.preventDefault();
             this.props.sendMessage();
         }
-    }
+    };
 
 
     render() {
@@ -37,7 +32,7 @@ class Message extends React.Component<IProps, IState> {
                         <textarea autoFocus className="form-control" id="message-text" cols={50} rows={2} value={this.props.messageText} onKeyPress={this.handleKeyPress} onChange={this.handleChange}/>
                     </div>
                     <div className="col-xs-2">
-                        <button className="btn btn-success btn-block" id="send" onClick={(e) => this.props.sendMessage()}>send trans</button>
+                        <button className="btn btn-success btn-block" id="send" onClick={() => this.props.sendMessage()}>send trans</button>
                     </div>
                 </div>
             </div>

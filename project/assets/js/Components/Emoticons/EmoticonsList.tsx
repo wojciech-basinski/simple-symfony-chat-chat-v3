@@ -4,8 +4,8 @@ import EmoticonImg from "./EmoticonImg";
 import Roll from "../Roll/Roll";
 
 interface IProps {
-    handleEmoticonClick:(par1) => void
-    handleRollClick;
+    handleEmoticonClick:(par1: string) => void
+    handleRollClick:() => void;
     rollDisabled: boolean;
 }
 
@@ -15,11 +15,6 @@ interface IState {
 class EmoticonsList extends React.Component<IProps, IState> {
     constructor(props:IProps) {
         super(props);
-        this.handleEmoticonClick = this.handleEmoticonClick.bind(this);
-    }
-
-    handleEmoticonClick(emoticonText: string): void {
-        this.props.handleEmoticonClick(emoticonText);
     }
 
     getEmoticonsImages() {
@@ -27,7 +22,7 @@ class EmoticonsList extends React.Component<IProps, IState> {
         Object.keys(emoticonsImages).forEach((key, i) => {
             let source = emoticonsImages[key].default;
             let text = Array.isArray(emoticonsText[i]) ? emoticonsText[i][0] : emoticonsText[i];
-            emoticons[i] = <EmoticonImg source={source} text={text} key={text} handleClick={this.handleEmoticonClick}/>;
+            emoticons[i] = <EmoticonImg source={source} text={text} key={text} handleClick={(text) => this.props.handleEmoticonClick(text)} />;
         });
         return emoticons;
     }

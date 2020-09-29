@@ -5,22 +5,15 @@ interface IProps {
     text: string,
     handleClick: (par1: string) => void
 }
-interface IState {
-}
 
-class EmoticonImg extends React.Component<IProps, IState> {
+class EmoticonImg extends React.Component<IProps, any> {
     constructor(props: IProps) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    handleClick(): void {
-        this.props.handleClick(this.props.text);
     }
 
     render() {
         return (
-            <img src={this.props.source} className="emoticon-img kursor" alt={this.props.text} onClick={this.handleClick}/>
+            <img src={this.props.source} className="emoticon-img kursor" alt={this.props.text} onClick={() => this.props.handleClick(this.props.text)}/>
         )
     }
 }

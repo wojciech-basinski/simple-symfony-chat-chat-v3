@@ -10,7 +10,6 @@ class MessageGroup extends React.Component<IProps, any>{
     }
 
     render() {
-        console.log(this.props.children);
         return (
             <div className="group-messages" data-user-id={this.props.userId}>
                 {this.props.children}

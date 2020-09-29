@@ -1,2 +1,2 @@
-export const ROLL_COOLDOWN = 30000;
-export const SOCKET_PATH = 'http://localhost:3001';
+export const ROLL_COOLDOWN = 0;
+export const SOCKET_PATH = '';

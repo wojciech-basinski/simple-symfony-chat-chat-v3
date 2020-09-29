@@ -11,7 +11,7 @@ import ErrorModal from "./Modal/ErrorModal";
 import initialChat from "../Utils/Chat/InitialChat";
 import socketIOClient from "socket.io-client";
 import playSound from "../Utils/Sound/playSound";
-import {ROLL_COOLDOWN, SOCKET_PATH} from "../Utils/Chat/ChatConfig"
+import {ROLL_COOLDOWN, SOCKET_PATH} from "../Utils/Chat/ChatConfig.local"
 import IMessage from "./Messages/IMessage";
 
 interface IState {
@@ -65,34 +65,18 @@ class Main extends React.Component<any, IState> {
             afk: false,
             messagesOnOtherChannels: {}
         };
-        this.handleAddBbCodeToMessageText = this.handleAddBbCodeToMessageText.bind(this);
-        this.handleChangeMessageText = this.handleChangeMessageText.bind(this);
-        this.handleAddEmoticonToMessageText = this.handleAddEmoticonToMessageText.bind(this);
-        this.sendMessageCall = this.sendMessageCall.bind(this);
-        this.sendRoll = this.sendRoll.bind(this);
-        this.unlockRoll = this.unlockRoll.bind(this);
-        this.toggleModal = this.toggleModal.bind(this);
-        this.sockets = this.sockets.bind(this);
-        this.insertPm = this.insertPm.bind(this);
-        this.insertNick = this.insertNick.bind(this);
-        this.initialSettings = this.initialSettings.bind(this);
-        this.handleChangeSound = this.handleChangeSound.bind(this);
-        this.handleChangeScroll = this.handleChangeScroll.bind(this);
-        this.saveSettingsInLocalStorage = this.saveSettingsInLocalStorage.bind(this);
-        this.connectUserOnSocket = this.connectUserOnSocket.bind(this);
-        this.changeChannel = this.changeChannel.bind(this);
     }
 
-    connectUserOnSocket() {
+    connectUserOnSocket = (): void => {
         this.socket.emit("connectUser", {
             "userRole": this.state.user.userRole,
             "userName": this.state.user.userName,
             "typing": this.state.typing,
             "afk": this.state.afk
         });
-    }
+    };
 
-    sockets(channels:{}) {
+    sockets = (channels:{}): void => {
         this.socket = socketIOClient(SOCKET_PATH);
         this.socket.on("connect", (data) => {
             Object.keys(channels).forEach((key) => {
@@ -150,7 +134,7 @@ class Main extends React.Component<any, IState> {
             }
 
         });
-    }
+    };
 
     componentDidMount(): void {
         window.addEventListener('blur', () => {
@@ -184,14 +168,14 @@ class Main extends React.Component<any, IState> {
         this.initialSettings();
     }
 
-    sendAfkStatus(status: boolean) {
+    sendAfkStatus = (status: boolean): void => {
         this.socket.emit("afk", {
             userName: this.state.user.userName,
             afk: status
         });
-    }
+    };
 
-    changeChannel(channel: number):void {
+    changeChannel = (channel: number):void => {
         this.setState((prevState) => {
             let messagesOnOtherChannels = prevState.messagesOnOtherChannels;
             messagesOnOtherChannels[channel] = 0;
@@ -210,10 +194,9 @@ class Main extends React.Component<any, IState> {
                     }
                 );
             });
-        console.log('channel clicked', channel);
-    }
+    };
 
-    initialSettings(): void {
+    initialSettings = (): void => {
         const settings = localStorage.getItem('settings');
         if (settings === null) {
             this.saveSettingsInLocalStorage();
@@ -223,9 +206,9 @@ class Main extends React.Component<any, IState> {
                 }
             )
         }
-    }
+    };
 
-    handleChangeSound() {
+    handleChangeSound = (): void => {
         this.setState(prevState => {
             return {
                 settings: {
@@ -234,9 +217,9 @@ class Main extends React.Component<any, IState> {
                 }
             }
         }, this.saveSettingsInLocalStorage);
-    }
+    };
 
-    handleChangeScroll() {
+    handleChangeScroll = (): void => {
         this.setState(prevState => {
             return {
                 settings: {
@@ -245,14 +228,14 @@ class Main extends React.Component<any, IState> {
                 }
             }
         }, this.saveSettingsInLocalStorage);
-    }
+    };
 
-    saveSettingsInLocalStorage(): void {
+    saveSettingsInLocalStorage = (): void => {
         let settings = this.state.settings;
         localStorage.setItem('settings', JSON.stringify(settings));
-    }
+    };
 
-    toggleModal(message: string|undefined = undefined): void {
+    toggleModal = (message: string|undefined = undefined): void => {
         const messageText: string = message ?? '';
         this.setState(prevState => {
             return {
@@ -260,25 +243,25 @@ class Main extends React.Component<any, IState> {
                 modal: !(prevState.modal)
             }
         });
-    }
+    };
 
-    sendRoll(): void {
+    sendRoll = (): void => {
         if (!this.state.rollDisabled) {
             this.sendMessageCall('/roll 2d100');
             this.setState({
                 rollDisabled: true
             });
-            setTimeout(this.unlockRoll, ROLL_COOLDOWN)
+            setTimeout(() => this.unlockRoll(), ROLL_COOLDOWN)
         }
-    }
+    };
 
-    unlockRoll() {
+    unlockRoll = (): void => {
         this.setState({
             rollDisabled: false
         });
-    }
+    };
 
-    sendMessageCall(message: string | undefined = undefined): void {
+    sendMessageCall = (message: string | undefined = undefined): void => {
         if (message === undefined && this.state.messageText.trim() === '') {
             return;
         }
@@ -296,31 +279,32 @@ class Main extends React.Component<any, IState> {
             }
             this.handleChangeMessageText('');
         }
-    }
+    };
 
-    handleAddText(addedText: string): void {
+    handleAddText = (addedText: string): void => {
         this.handleSendTypingMessage(addedText);
         this.setState(prevState => {
             return {
                 messageText: prevState.messageText + addedText
             }
         });
-    }
-    //TODO ustawić kursor w środku bbcode
-    handleAddBbCodeToMessageText(addedBbCode: string): void {
-        this.handleAddText(addedBbCode);
     };
+
+    //TODO ustawić kursor w środku bbcode
+    handleAddBbCodeToMessageText = (addedBbCode: string): void => {
+        this.handleAddText('[' + addedBbCode + '][/' + addedBbCode + ']');
+    };
+
     //TODO ustawić kursor za emoticoną
-    handleAddEmoticonToMessageText(addedEmoticon: string): void {
+    handleAddEmoticonToMessageText = (addedEmoticon: string): void => {
         this.handleAddText(addedEmoticon);
     };
 
-    handleSendTypingMessage(message: string) {
+    handleSendTypingMessage = (message: string): void => {
         if (message.search('/priv') !== -1 || message.search('/msg') !== -1) {
             this.setState({
                 typing: false
             });
-            console.log('send not typing');
             this.socket.emit("typing", {
                 typing: false,
                 userName: this.state.user.userName
@@ -328,7 +312,6 @@ class Main extends React.Component<any, IState> {
             return;
         }
         if (!this.state.typing && message !== '') {
-            console.log('send typing');
             this.socket.emit("typing", {
                 typing: true,
                 userName: this.state.user.userName
@@ -337,9 +320,9 @@ class Main extends React.Component<any, IState> {
                 typing: true
             });
         }
-    }
+    };
 
-    handleChangeMessageText(message: string): void {
+    handleChangeMessageText = (message: string): void => {
         this.handleSendTypingMessage(message);
         this.setState({
             messageText: message
@@ -354,15 +337,15 @@ class Main extends React.Component<any, IState> {
                 typing: false
             });
         }
-    }
+    };
 
-    insertPm(username: string): void {
+    insertPm = (username: string): void => {
         this.handleChangeMessageText('/priv ' + username + ' ');
-    }
+    };
 
-    insertNick(username: string): void {
+    insertNick = (username: string): void => {
         this.handleAddText('@' + username + ' ');
-    }
+    };
 
     render() {
         return (

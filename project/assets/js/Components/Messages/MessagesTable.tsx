@@ -16,23 +16,12 @@ interface IProps {
 class MessagesTable extends React.Component<IProps, any> {
     constructor(props: IProps) {
         super(props);
-        this.messages = this.messages.bind(this);
-        this.insertPm = this.insertPm.bind(this);
-        this.insertNick = this.insertNick.bind(this);
-    }
-
-    insertPm(username: string):void  {
-        this.props.insertPm(username);
-    }
-
-    insertNick(username: string): void {
-        this.props.insertNick(username);
     }
 
     messages() {
         let messageList:any[] = [];
         let messagesList = this.props.messages;
-        const user = this.props.user;
+        const user:User = this.props.user;
         let lastUserId:number = 0;
         let that = this;
         let group:any[] = [];
@@ -47,7 +36,7 @@ class MessagesTable extends React.Component<IProps, any> {
             } else {
                 messageList.push(<MessageGroup key={messagesList[i].id} userId={lastUserId}>{group}</MessageGroup>);
                 group = [];
-                group.push(<MessagePresentation insertNick={that.insertNick} insertPm={that.insertPm} user={user} canPmToUser={canPmToUser} key={messagesList[i].id} message={messagesList[i]} canDelete={canDelete} isPm={isPm} date={date}/>);
+                group.push(<MessagePresentation insertNick={that.props.insertNick} insertPm={that.props.insertPm} user={user} canPmToUser={canPmToUser} key={messagesList[i].id} message={messagesList[i]} canDelete={canDelete} isPm={isPm} date={date}/>);
             }
             if (!group.length) {
                 messageList.push(<MessageGroup key={messagesList[i].id} userId={lastUserId}>{group}</MessageGroup>);

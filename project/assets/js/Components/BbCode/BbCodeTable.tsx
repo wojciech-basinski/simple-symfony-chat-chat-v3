@@ -16,7 +16,7 @@ export default class BbCodeTable extends React.Component<IProps, IState> {
 
     render() {
         const buttons = BbCodesList.map((name) => {
-            return (<BbCodeButton bbCode={name} key={name} onClick={(e) => this.props.onBbCodeClick(e)}/>)
+            return (<BbCodeButton bbCode={name} key={name} onClick={this.props.onBbCodeClick}/>)
         });
 
         return (

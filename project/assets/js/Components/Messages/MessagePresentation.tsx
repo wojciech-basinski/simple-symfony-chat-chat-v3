@@ -24,14 +24,6 @@ export default class MessagePresentation extends React.Component<IProps, any>{
         this.state = { hasError: false };
     }
 
-    insertPm(): void {
-        this.props.insertPm(this.props.message.userName);
-    }
-
-    insertNick(): void {
-        this.props.insertNick(this.props.message.userName);
-    }
-
     render() {
         if (this.state.hasError) {
             return <div>Problem z wyświetleniem wiadomości</div>;
@@ -49,8 +41,8 @@ export default class MessagePresentation extends React.Component<IProps, any>{
                 <img className="avatar" src={avatarUrl} alt={"avatar"}/>
                 <div>
                     <div className="presentation">
-                        {this.props.canPmToUser ? <span className="icon-mail pointer" data-value={userName} onClick={this.insertPm}/> : null}
-                        <span onClick={this.insertNick} className={userRole + ' text-bold nick pointer'}>{userName}</span>
+                        {this.props.canPmToUser ? <span className="icon-mail pointer" data-value={userName} onClick={() => this.props.insertPm(userName)}/> : null}
+                        <span onClick={() => this.props.insertNick(userName)} className={userRole + ' text-bold nick pointer'}>{userName}</span>
                         <OverlayTrigger placement="top" overlay={<Tooltip className={"in"} placement="top" id="tooltip">{dateGetHours(date) + ':' + dateGetMinutes(date) + ':' + dateGetSeconds(date)}</Tooltip>}>
                             <span className="date">{dateGetHours(date) + ':' + dateGetMinutes(date)}</span>
                         </OverlayTrigger>

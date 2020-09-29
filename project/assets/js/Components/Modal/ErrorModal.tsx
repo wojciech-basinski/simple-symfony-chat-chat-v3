@@ -21,7 +21,7 @@ class ErrorModal extends React.Component<IProps, any> {
                         <div className={"modal-text"}>{this.props.message}</div>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={(e) => this.props.toggleModal()}>Close</Button>
+                        <Button onClick={() => this.props.toggleModal()}>Close</Button>
                     </Modal.Footer>
                 </Modal>
             </div>
