@@ -22,8 +22,8 @@ class AddMessageServiceStrategy
     {
         $textSplitted = explode(' ', $text, 2);
 
-        foreach($this->specialMessageCreators as $service) {
-            if($service->canAdd($textSplitted[0])) {
+        foreach ($this->specialMessageCreators as $service) {
+            if ($service->canAdd($textSplitted[0])) {
                 return $service->add($textSplitted, $user, $channel);
             }
         }

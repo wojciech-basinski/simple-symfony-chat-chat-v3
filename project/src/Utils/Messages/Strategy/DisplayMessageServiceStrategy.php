@@ -21,8 +21,8 @@ class DisplayMessageServiceStrategy
     {
         $textSplitted = explode(' ', $text, 2);
 
-        foreach($this->specialMessageDisplays as $service) {
-            if($service->canDisplay($textSplitted[0])) {
+        foreach ($this->specialMessageDisplays as $service) {
+            if ($service->canDisplay($textSplitted[0])) {
                 return $service->display($textSplitted);
             }
         }

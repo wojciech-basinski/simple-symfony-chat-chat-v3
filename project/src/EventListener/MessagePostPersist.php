@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php declare(strict_types = 1);
 
 namespace App\EventListener;
 
@@ -23,10 +23,10 @@ class MessagePostPersist
         $entity = $args->getObject();
 
         if ($entity instanceof Message) {
-           $this->emitMessage->emitMessage("new_message", [
+            $this->emitMessage->emitMessage("new_message", [
                'channel' => $entity->getChannel(),
                'message' => $this->messageToArrayTransformer->transformMessagesToArray([$entity])[0]
-           ]);
+            ]);
         }
     }
 }

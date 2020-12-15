@@ -73,7 +73,6 @@ class ChatController extends Controller
         $response = $message->addMessageToDatabase($user, $messageText, $channel);
 
         return $response;
-
     }
 
     /**
