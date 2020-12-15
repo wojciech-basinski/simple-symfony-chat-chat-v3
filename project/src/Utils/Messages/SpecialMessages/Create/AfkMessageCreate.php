@@ -57,9 +57,8 @@ class AfkMessageCreate implements SpecialMessageAdd
         return true;
     }
 
-    private function removeAfk(array $text, User $user, UserOnline $userOnline, int $channel): bool
+    private function removeAfk(array $text, User $user, int $channel): bool
     {
-        $userOnline->setAfk(false);
 
         if (!isset($text[1])) {
             $this->session->set('afk', false);
@@ -69,7 +68,6 @@ class AfkMessageCreate implements SpecialMessageAdd
             );
         }
 
-        $this->updateUserOnline($userOnline);
         return true;
     }
 
@@ -81,11 +79,5 @@ class AfkMessageCreate implements SpecialMessageAdd
     private function createReturnFromAfkText(User $user): string
     {
         return '/returnAfk '.$user->getUsername();
-    }
-
-    private function updateUserOnline(UserOnline $userOnline): void
-    {
-        $this->em->persist($userOnline);
-        $this->em->flush();
     }
 }

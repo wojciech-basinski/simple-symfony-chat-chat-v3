@@ -1,0 +1,3 @@
+parameters:
+	reportStaticMethodSignatures: true
+	tmpDir: %rootDir%/tmp

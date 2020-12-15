@@ -3,7 +3,6 @@
 namespace App\Utils\Messages\SpecialMessages\Create;
 
 use App\Entity\User;
-use App\Entity\UserOnline;
 use App\Utils\ChatConfig;
 use App\Utils\Messages\Database\AddMessageToDatabase;
 use Doctrine\ORM\EntityManagerInterface;
@@ -101,10 +100,6 @@ class BanUserCreate implements SpecialMessageAdd
         $userToBan->setBanReason($reason)
             ->setBanned(new \DateTime("now + $banLength sec"));
         $this->em->persist($userToBan);
-        $userOnline = $this->em->getRepository(UserOnline::class)->findOneBy(['userId' => $userToBan->getId()]);
-        if ($userOnline) {
-            $this->em->remove($userOnline);
-        }
         $this->em->flush();
 
         $this->addMessageToDatabase->addBotMessage(
