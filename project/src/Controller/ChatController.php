@@ -8,6 +8,7 @@ use App\Utils\Messages\AddMessage;
 use App\Utils\Messages\DeleteMessage;
 use App\Utils\Messages\MessageGetter;
 use App\Utils\UserOnline;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
@@ -30,7 +31,8 @@ class ChatController extends Controller
         Channel $channelService,
         ChatConfig $config,
         SessionInterface $session,
-        EngineInterface $twig
+        EngineInterface $twig,
+        JWTTokenManagerInterface $jwtManager
     ): Response {
         $user = $this->getUser();
         $channel = $session->get('channel');
@@ -47,7 +49,8 @@ class ChatController extends Controller
             'botId' => $config->getBotId(),
             'channel' => $channel,
             'privateChannelId' => $config->getUserPrivateMessageChannelId($user),
-            'privateMessageChannelId' => $config->getUserPrivateMessageChannelId($user)
+            'privateMessageChannelId' => $config->getUserPrivateMessageChannelId($user),
+            'token' => $jwtManager->create($user)
         ]);
         $response->setContent($body);
         $response->headers->set('Access-Control-Allow-Origin', '*');//TODO array z youtueb
