@@ -33,6 +33,12 @@ class AfkMessageCreate implements SpecialMessageAdd
         $this->session = $session;
         $this->addMessageToDatabase = $addMessageToDatabase;
     }
+
+    public function canAdd(string $text): bool
+    {
+        return $text === '/zw' || $text === '/afk' || $text === '/jj';
+    }
+
     /**
      * Add special message
      *

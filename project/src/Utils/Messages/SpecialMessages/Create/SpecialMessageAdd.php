@@ -7,13 +7,12 @@ use App\Entity\User;
 interface SpecialMessageAdd
 {
     /**
+     * check if service can add message
+     */
+    public function canAdd(string $text): bool;
+
+    /**
      * Add special message
-     *
-     * @param array $text
-     * @param User $user
-     * @param int $channel
-     *
-     * @return bool
      */
     public function add(array $text, User $user, int $channel): bool;
 }

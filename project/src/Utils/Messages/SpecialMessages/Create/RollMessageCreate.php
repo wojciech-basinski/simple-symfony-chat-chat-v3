@@ -27,6 +27,11 @@ class RollMessageCreate implements SpecialMessageAdd
         $this->addMessageToDatabase = $addMessageToDatabase;
     }
 
+    public function canAdd(string $text): bool
+    {
+        return $text === '/roll';
+    }
+
     public function add(array $text, User $user, int $channel): bool
     {
         if ($this->config->getRollCoolDown() && !$this->checkRollCoolDown()) {

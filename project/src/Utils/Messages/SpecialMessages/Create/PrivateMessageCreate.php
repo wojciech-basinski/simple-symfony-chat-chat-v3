@@ -45,6 +45,13 @@ class PrivateMessageCreate implements SpecialMessageAdd
         $this->config = $config;
         $this->em = $em;
     }
+
+
+    public function canAdd(string $text): bool
+    {
+        return $text === '/priv' || $text === '/msg';
+    }
+
     /**
      * Add special message
      *

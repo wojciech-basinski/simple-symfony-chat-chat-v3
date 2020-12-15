@@ -46,6 +46,11 @@ class UnInviteMessageCreate implements SpecialMessageAdd
         $this->em = $em;
         $this->addMessageToDatabase = $addMessageToDatabase;
     }
+
+    public function canAdd(string $text): bool
+    {
+        return $text === '/uninvite';
+    }
     /**
      * Add special message
      *

@@ -46,6 +46,12 @@ class InviteMessageCreate implements SpecialMessageAdd
         $this->em = $em;
         $this->addMessageToDatabase = $addMessageToDatabase;
     }
+
+    public function canAdd(string $text): bool
+    {
+        return $text === '/invite';
+    }
+
     /**
      * Add special message
      *

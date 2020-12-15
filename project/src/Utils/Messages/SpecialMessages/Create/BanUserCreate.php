@@ -53,6 +53,13 @@ class BanUserCreate implements SpecialMessageAdd
         $this->addMessageToDatabase = $addMessageToDatabase;
         $this->config = $config;
     }
+
+
+    public function canAdd(string $text): bool
+    {
+        return $text === '/ban';
+    }
+
     /**
      * Add special message
      *

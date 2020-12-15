@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  App\Utils\Messages\SpecialMessages\Create\:
+    resource: '../../src/Utils/Messages/SpecialMessages/Create'
+    tags: ['special.messages.create']
+
+  App\Utils\Messages\Strategy\AddMessageServiceStrategy:
+    arguments:
+      - !tagged special.messages.create

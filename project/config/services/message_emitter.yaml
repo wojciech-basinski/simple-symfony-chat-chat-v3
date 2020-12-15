@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  App\Utils\EmitMessage\:
+    resource: '../../src/Utils/EmitMessage'
+
+  App\Utils\EmitMessage\EmitNewMessage:
+    arguments:
+      $sockerPath: '%env(SOCKET_PATH)%'
+
+  message.emitter.default:
+    alias: App\Utils\EmitMessage\EmitNewMessage

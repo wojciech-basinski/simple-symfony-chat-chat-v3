@@ -52,6 +52,12 @@ class UnBanUserCreate implements SpecialMessageAdd
         $this->addMessageToDatabase = $addMessageToDatabase;
         $this->config = $config;
     }
+
+    public function canAdd(string $text): bool
+    {
+        return $text === '/unban';
+    }
+
     /**
      * Add special message
      *

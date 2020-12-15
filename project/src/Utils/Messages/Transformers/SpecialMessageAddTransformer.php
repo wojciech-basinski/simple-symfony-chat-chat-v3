@@ -3,17 +3,17 @@
 namespace App\Utils\Messages\Transformers;
 
 use App\Entity\User;
-use App\Utils\Messages\Factory\AddMessageServiceFactory;
+use App\Utils\Messages\Strategy\AddMessageServiceStrategy;
 
 class SpecialMessageAddTransformer
 {
     /**
-     * @var AddMessageServiceFactory
+     * @var AddMessageServiceStrategy
      */
     private $messageServiceFactory;
 
     public function __construct(
-        AddMessageServiceFactory $messageServiceFactory
+        AddMessageServiceStrategy $messageServiceFactory
     ) {
         $this->messageServiceFactory = $messageServiceFactory;
     }
@@ -27,15 +27,6 @@ class SpecialMessageAddTransformer
      */
     public function specialMessagesAdd(string $text, User $user, int $channel): ?bool
     {
-        $addMessageService = $this->messageServiceFactory->getAddService($text);
-        if ($addMessageService === null) {
-            return null;
-        }
-        return $addMessageService->add($this->explodeText($text), $user, $channel);
-    }
-
-    private function explodeText(string $text): array
-    {
-        return \explode(' ', $text, 2);
+        return $this->messageServiceFactory->addSpecialMessage($text, $user, $channel);
     }
 }
