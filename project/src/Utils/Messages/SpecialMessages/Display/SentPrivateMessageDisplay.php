@@ -16,6 +16,11 @@ class SentPrivateMessageDisplay implements SpecialMessageDisplay
         $this->translator = $translator;
     }
 
+    public function canDisplay(string $text): bool
+    {
+        return $text === '/privTo';
+    }
+
     /**
      * Display special message
      */

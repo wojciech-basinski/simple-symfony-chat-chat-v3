@@ -22,6 +22,11 @@ class BanListDisplay implements SpecialMessageDisplay
         $this->config = $config;
     }
 
+    public function canDisplay(string $text): bool
+    {
+        return $text === '/banlist';
+    }
+
     /**
      * Display special message
      */

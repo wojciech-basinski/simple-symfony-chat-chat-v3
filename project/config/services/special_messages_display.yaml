@@ -1,0 +1,13 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  App\Utils\Messages\SpecialMessages\Display\:
+    resource: '../../src/Utils/Messages/SpecialMessages/Display'
+    tags: ['special.messages.display']
+
+  App\Utils\Messages\Strategy\DisplayMessageServiceStrategy:
+    arguments:
+      - !tagged special.messages.display

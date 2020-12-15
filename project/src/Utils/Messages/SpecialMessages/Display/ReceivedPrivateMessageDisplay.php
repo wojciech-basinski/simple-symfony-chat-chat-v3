@@ -16,6 +16,11 @@ class ReceivedPrivateMessageDisplay implements SpecialMessageDisplay
         $this->translator = $translator;
     }
 
+    public function canDisplay(string $text): bool
+    {
+        return $text === '/privMsg';
+    }
+
     public function display(array $textSplitted): array
     {
         $text = $this->translator->trans(

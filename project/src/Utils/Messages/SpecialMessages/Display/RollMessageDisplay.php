@@ -17,6 +17,11 @@ class RollMessageDisplay implements SpecialMessageDisplay
         $this->config = $config;
     }
 
+    public function canDisplay(string $text): bool
+    {
+        return $text === '/roll';
+    }
+
     public function display(array $textSplitted): array
     {
         $textSplitted = explode(' ', $textSplitted[1], 3);

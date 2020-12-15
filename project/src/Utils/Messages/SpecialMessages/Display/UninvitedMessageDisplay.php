@@ -22,6 +22,11 @@ class UninvitedMessageDisplay implements SpecialMessageDisplay
         $this->config = $config;
     }
 
+    public function canDisplay(string $text): bool
+    {
+        return $text === '/uninvited';
+    }
+
     /**
      * Display special message
      */

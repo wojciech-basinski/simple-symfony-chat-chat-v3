@@ -2,31 +2,19 @@
 
 namespace App\Utils\Messages\Transformers;
 
-use App\Utils\Messages\Factory\DisplayMessageServiceFactory;
+use App\Utils\Messages\Strategy\DisplayMessageServiceStrategy;
 
 class SpecialMessageDisplayTransformer
 {
-    /**
-     * @var DisplayMessageServiceFactory
-     */
-    private $messageServiceFactory;
+    private DisplayMessageServiceStrategy $messageServiceStrategy;
 
-    public function __construct(DisplayMessageServiceFactory $messageServiceFactory)
+    public function __construct(DisplayMessageServiceStrategy $messageServiceStrategy)
     {
-        $this->messageServiceFactory = $messageServiceFactory;
+        $this->messageServiceStrategy = $messageServiceStrategy;
     }
 
-    public function specialMessagesDisplay(string $text): array
+    public function specialMessagesDisplay(string $text): ?array
     {
-        $displayService = $this->messageServiceFactory->getDisplayService($text);
-        if ($displayService === null) {
-            return ['userId' => false];
-        }
-        return $displayService->display($this->explodeText($text));
-    }
-
-    private function explodeText(string $text): array
-    {
-        return \explode(' ', $text, 2);
+        return $this->messageServiceStrategy->getDisplayMessage($text);
     }
 }

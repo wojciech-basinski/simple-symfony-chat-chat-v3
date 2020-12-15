@@ -7,10 +7,7 @@ use App\Utils\Messages\Strategy\AddMessageServiceStrategy;
 
 class SpecialMessageAddTransformer
 {
-    /**
-     * @var AddMessageServiceStrategy
-     */
-    private $messageServiceFactory;
+    private AddMessageServiceStrategy $messageServiceFactory;
 
     public function __construct(
         AddMessageServiceStrategy $messageServiceFactory

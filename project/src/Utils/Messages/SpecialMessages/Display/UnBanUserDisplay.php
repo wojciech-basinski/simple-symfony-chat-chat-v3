@@ -21,9 +21,12 @@ class UnBanUserDisplay implements SpecialMessageDisplay
         $this->translator = $translator;
         $this->config = $config;
     }
-    /**
-     * Display special message
-     */
+
+    public function canDisplay(string $text): bool
+    {
+        return $text === '/unban';
+    }
+
     public function display(array $textSplitted): array
     {
         $text = $this->translator->trans(
