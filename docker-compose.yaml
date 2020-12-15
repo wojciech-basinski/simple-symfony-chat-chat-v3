@@ -7,11 +7,14 @@ services:
     volumes:
       - ./project:/var/www/html/project
       - ./docker/apache/config:/etc/apache2/sites-enabled
+      - ./docker/php/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
     networks:
       - elastic
       - mysql
       - rabbitmq
       - nodejs
+    environment:
+      - PHP_IDE_CONFIG=serverName=symfony-docker
     depends_on:
       - mysql
 #      - elasticsearch
