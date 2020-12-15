@@ -10,11 +10,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class ChatConfig
 {
     /**
-     * @var int time in second when user is logout from chat when he is inactivity
-     */
-    private const INACTIVE_TIME = 180;
-
-    /**
      * @var array array of channels
      * DO NOT CHANGE FIRST CHANNEL
      */
@@ -87,11 +82,6 @@ class ChatConfig
     public function getBotId(): int
     {
         return $this->botId;
-    }
-
-    public function getInactiveTime(): int
-    {
-        return self::INACTIVE_TIME;
     }
 
     public function getUserPrivateChannel(User $user): array

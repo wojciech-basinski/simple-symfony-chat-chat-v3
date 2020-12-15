@@ -41,18 +41,8 @@ class AddMessageValidator
      */
     public function validateMessage(User $user, int $channel, ?string $text): bool
     {
-        if ($text === null) {
-            $errorMessage = $this->translator->trans(
-                'error.emptyMessage',
-                [],
-                'chat',
-                $this->translator->getLocale()
-            );
-            $this->session->set('errorMessage', $errorMessage);
-            return false;
-        }
         $text = strtolower(trim($text));
-        if (strlen($text) <= 0) {
+        if ($text === null || strlen($text) <= 0) {
             $errorMessage = $this->translator->trans(
                 'error.emptyMessage',
                 [],
@@ -102,6 +92,7 @@ class AddMessageValidator
             $this->session->set('errorMessage', $errorMessage);
             return false;
         }
+
         return true;
     }
 }

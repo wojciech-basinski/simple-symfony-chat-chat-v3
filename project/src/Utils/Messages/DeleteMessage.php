@@ -11,18 +11,12 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class DeleteMessage
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+
+    private EntityManagerInterface $em;
+
+    private SessionInterface $session;
+
+    private RequestStack$requestStack;
 
     public function __construct(
         EntityManagerInterface $em,

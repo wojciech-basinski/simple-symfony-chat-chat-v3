@@ -6,33 +6,23 @@ use App\Entity\Message;
 
 class MessageToArrayTransformer
 {
-    /**
-     * @var SpecialMessageDisplayTransformer
-     */
-    private $specialMessageDisplayTransformer;
+    private SpecialMessageDisplayTransformer $specialMessageDisplayTransformer;
 
     public function __construct(SpecialMessageDisplayTransformer $specialMessageDisplayTransformer)
     {
         $this->specialMessageDisplayTransformer = $specialMessageDisplayTransformer;
     }
 
-    /**
-     * Changing mesages from entity to array
-     *
-     * @param Message[] $messages Messages to changed
-     *
-     * @return array
-     */
     public function transformMessagesToArray(array $messages): array
     {
         $messagesArray = [];
         foreach ($messages as $message) {
-            $messagesArray[] = $this->createArrayToJson($message);
+            $messagesArray[] = $this->createArray($message);
         }
         return $messagesArray;
     }
 
-    private function createArrayToJson(Message $message): array
+    private function createArray(Message $message): array
     {
         $text = $this->specialMessageDisplayTransformer->specialMessagesDisplay($message->getText());
 

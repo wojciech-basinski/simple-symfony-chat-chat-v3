@@ -12,10 +12,7 @@ class UserAfkValidator
         '/jj'
     ];
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private SessionInterface $session;
 
     public function __construct(SessionInterface $session)
     {

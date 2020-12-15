@@ -7,15 +7,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class Banned
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
 
-    /**
-     * @var User|null
-     */
-    private $user;
+    private EntityManagerInterface $em;
+
+    private ?User $user;
 
     public function __construct(EntityManagerInterface $em)
     {

@@ -9,9 +9,8 @@ class SpecialMessageAddTransformer
 {
     private AddMessageServiceStrategy $messageServiceFactory;
 
-    public function __construct(
-        AddMessageServiceStrategy $messageServiceFactory
-    ) {
+    public function __construct(AddMessageServiceStrategy $messageServiceFactory)
+    {
         $this->messageServiceFactory = $messageServiceFactory;
     }
 

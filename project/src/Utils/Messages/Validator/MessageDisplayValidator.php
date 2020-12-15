@@ -9,10 +9,7 @@ use function explode;
 
 class MessageDisplayValidator
 {
-    /**
-     * @var Channel
-     */
-    private $channel;
+    private Channel $channel;
 
     public function __construct(Channel $channel)
     {
