@@ -25,16 +25,6 @@ class ChatConfig
     ];
 
     /**
-     * @var int Login by MyBB forum user
-     */
-    private const MYBB = 0;
-
-    /**
-     * @var int Login by phpBB forum user
-     */
-    private const PHPBB = 0;
-
-    /**
      * @var int moderator channel id
      */
     private const MODERATOR_CHANNEL_ID = 3;
@@ -97,16 +87,6 @@ class ChatConfig
     public function getBotId(): int
     {
         return $this->botId;
-    }
-
-    public static function getMyBB(): int
-    {
-        return self::MYBB;
-    }
-
-    public static function getPhpBB(): int
-    {
-        return self::PHPBB;
     }
 
     public function getInactiveTime(): int

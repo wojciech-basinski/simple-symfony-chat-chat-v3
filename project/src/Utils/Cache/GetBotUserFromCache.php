@@ -11,22 +11,13 @@ use Symfony\Component\Cache\Simple\FilesystemCache;
 
 class GetBotUserFromCache
 {
-    /**
-     * @var FilesystemCache
-     */
-    private $cache;
-    /**
-     * @var ChatConfig
-     */
-    private $config;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private FilesystemCache $cache;
+
+    private ChatConfig $config;
+
+    private EntityManagerInterface $em;
+
+    private LoggerInterface $logger;
 
     public function __construct(
         FilesystemCache $cache,

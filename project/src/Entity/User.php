@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Utils\ChatConfig;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,11 +18,6 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @ORM\OneToMany(targetEntity="UserOnline", mappedBy="userInfo")
-     */
-    protected $userOnline;
 
     /**
      * @ORM\OneToMany(targetEntity="Message", mappedBy="userInfo")
@@ -57,22 +51,12 @@ class User extends BaseUser
         $this->userMessage = new ArrayCollection();
     }
 
-    public function setId(int $id)
-    {
-        if (ChatConfig::getPhpBB() || ChatConfig::getMyBB()) {
-            $this->id = $id;
-        }
-    }
-
     /**
      * @return string User's role change to text (used as css class)
      */
     public function getChatRoleAsText(): string
     {
         $role = $this->getRoles();
-        if ($this->getUsername() === 'demotywatorking') {
-            return 'demotywatorking';
-        }
         switch ($role[0]) {
             case 'ROLE_ADMIN':
                 return 'administrator';

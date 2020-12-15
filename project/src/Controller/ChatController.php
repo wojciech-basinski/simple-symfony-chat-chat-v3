@@ -27,7 +27,6 @@ class ChatController extends Controller
      */
     public function showAction(
         Request $request,
-        UserOnline $userOnline,
         Channel $channelService,
         ChatConfig $config,
         SessionInterface $session,
@@ -39,9 +38,6 @@ class ChatController extends Controller
             $channel = 1;
         }
 
-        if ($userOnline->updateUserOnline($user, $channel, false)) {
-            return $this->redirectToRoute('banned');
-        }
         $response = new Response();
         $body = $twig->render('chat/index.html.twig', [
             'user' => $user,
@@ -81,20 +77,17 @@ class ChatController extends Controller
     }
 
     /**
-     * @Route("/chat/initial/", name="chat_get_initial", methods={"POST"})
+     * @Route("/chat/initial/", name="chat_get_initial", methods={"GET"})
      */
     public function initialAction(
         Request $request,
-        UserOnline $userOnlineService,
         Channel $channelUtil,
-        SessionInterface $session,
         ChatConfig $config,
         TranslatorInterface $translator,
         MessageGetter $messageGetter
     ): Response {
         $changeChannel = 0;
-        $parameters = json_decode($request->getContent(), true);
-        $channel = $parameters['channel'] ?? 1;
+        $channel = (int) $request->query->get('channel') ?? 1;
         $canBeOnChannel = $channelUtil->checkIfUserCanBeOnThatChannel($this->getUser(), $channel);
         if (!$canBeOnChannel) {
             $channel = 1;
@@ -146,16 +139,12 @@ class ChatController extends Controller
      * @Route("/chat/logout", name="chat_logout")
      *
      * Logout from chat
-     * Delete User's info from online users in database and then redirect to logout in fosuserbundle
-     *
-     * @param UserOnline $userOnlineService
      *
      * @return RedirectResponse Redirect to fos logout
      */
-    public function logoutAction(UserOnline $userOnlineService): Response
+    public function logoutAction(): Response
     {
-        $userOnlineService->deleteUserWhenLogout($this->getUser()->getId());
-
+        //TODO remove from online socket
         return $this->redirectToRoute('fos_user_security_logout');
     }
 

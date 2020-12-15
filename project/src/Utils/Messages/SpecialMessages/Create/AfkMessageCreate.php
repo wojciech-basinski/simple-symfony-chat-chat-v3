@@ -3,8 +3,6 @@
 namespace App\Utils\Messages\SpecialMessages\Create;
 
 use App\Entity\User;
-use App\Entity\UserOnline;
-use App\Utils\Cache\GetBotUserFromCache;
 use App\Utils\Messages\Database\AddMessageToDatabase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -55,31 +53,7 @@ class AfkMessageCreate implements SpecialMessageAdd
 
     private function afk(array $text, User $user, int $channel): bool
     {
-        /** @var UserOnline|null $userOnline */
-        $userOnline = $this->em->getRepository(UserOnline::class)->findOneBy(['userId' => $user->getId()]);
-        if ($userOnline === null) {
-            $this->session->set(
-                'errorMessage',
-                'Error'
-            );
-            return false;
-        }
-
-        if ($userOnline->getAfk()) {
-            return $this->removeAfk($text, $user, $userOnline, $channel);
-        }
-
-        $userOnline->setAfk(true);
-
-        if (!isset($text[1])) {
-            $this->session->set('afk', true);
-            $this->addMessageToDatabase->addBotMessage(
-                $this->createAfkText($user),
-                $channel
-            );
-        }
-
-        $this->updateUserOnline($userOnline);
+        //TODO?
         return true;
     }
 

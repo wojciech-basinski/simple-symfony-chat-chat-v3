@@ -12,27 +12,16 @@ class Channel
 
     private SessionInterface $session;
 
-    private UserOnline $userOnline;
-
     private LoggerInterface $logger;
 
-    /**
-     * Channel constructor.
-     *
-     * @param ChatConfig $config
-     * @param SessionInterface $session
-     * @param UserOnline $userOnline
-     * @param LoggerInterface $logger
-     */
+
     public function __construct(
         ChatConfig $config,
         SessionInterface $session,
-        UserOnline $userOnline,
         LoggerInterface $logger
     ) {
         $this->config = $config;
         $this->session = $session;
-        $this->userOnline = $userOnline;
         $this->logger = $logger;
     }
 
