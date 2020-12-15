@@ -25,3 +25,7 @@ yarn-error.log
 /.web-server-pid
 ###< symfony/web-server-bundle ###
 /assets/js/Utils/Chat/ChatConfig.local.js
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
