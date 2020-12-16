@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trans } from 'react-i18next';
 
 interface IProps {
     messageText: string;
@@ -29,10 +30,10 @@ class Message extends React.Component<IProps, any> {
                 <div className="row">
                     <div id="emoji-container"/>
                     <div className="col-xs-10">
-                        <textarea autoFocus className="form-control" id="message-text" cols={50} rows={2} value={this.props.messageText} onKeyPress={this.handleKeyPress} onChange={this.handleChange}/>
+                        <textarea className="form-control" id="message-text" cols={50} rows={2} value={this.props.messageText} onKeyPress={this.handleKeyPress} onChange={this.handleChange}/>
                     </div>
                     <div className="col-xs-2">
-                        <button className="btn btn-success btn-block" id="send" onClick={() => this.props.sendMessage()}>send trans</button>
+                        <button className="btn btn-success btn-block" id="send" onClick={() => this.props.sendMessage()}><Trans>chat.send</Trans></button>
                     </div>
                 </div>
             </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import User from "./User";
 import Channel from "../Channel/Channel";
 import UserOnline from "./UserOnline";
+import { Trans } from 'react-i18next';
 
 interface IProps {
     locale: string;
@@ -55,12 +56,12 @@ class UsersList extends React.Component<IProps, any> {
                             <div className="text-in-info language {{ locale == 'en' ? 'active' }}" data-value="en">EN</div>
                         </div>
                         <div className="text-bold info-text" role="button" data-toggle="collapse"
-                             data-href="#channels" aria-expanded="true">channel trans:</div>
+                             data-href="#channels" aria-expanded="true"><Trans>channel.list</Trans></div>
                         <div id="channels" className="collapse in">
                             {this.channels()}
                         </div>
                         <div className="text-bold info-text" role="button" data-toggle="collapse"
-                             data-href="#users-box" aria-expanded="true">online trans:</div>
+                             data-href="#users-box" aria-expanded="true"><Trans>user.online.list</Trans></div>
                         <div id="users-box" className="collapse in">
                             {/*<UserOnline userName={this.user.userName} userRole={this.user.userRole} />*/}
                             {this.usersOnline()}
@@ -69,7 +70,7 @@ class UsersList extends React.Component<IProps, any> {
                             {/*{% if is_granted('ROLE_ADMIN') %}*/}
                             {/*<a href="{{ path('chat_admin') }}" target="_blank">{{ 'panel'|trans }}</a>*/}
                             {/*{% endif %}*/}
-                            <a href="path to logout" className="btn btn-success">logout trans</a>
+                            <a href="path to logout" className="btn btn-success"><Trans>chat.logout</Trans></a>
                         </div>
                     </div>
                 </div>

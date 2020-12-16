@@ -1,0 +1,23 @@
+{
+  "translations": {
+    "chat": {
+      "logout": "Wyloguj się",
+      "send": "Wyślij"
+    },
+    "error": {
+      "sending": "Wystąpił błąd podczas wysyłania wiadomości"
+    },
+    "channel": {
+      "list": "Kanały",
+      "Default": "Domyślny",
+      "Other": "Inny",
+      "Test": "Test",
+      "Private": "Prywatny"
+    },
+    "user": {
+      "online": {
+        "list": "Użytkownicy online"
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "translations": {
+    "chat": {
+      "logout": "Logout",
+      "send": "send"
+    },
+    "error": {
+      "sending": "An error occurred while sending message"
+    },
+    "channel": {
+      "list": "Channels list",
+      "Default": "Default",
+      "Other": "Other",
+      "Test": "Test",
+      "Private": "Private"
+    },
+    "user": {
+      "online": {
+        "list": "Users online"
+      }
+    }
+  }
+}

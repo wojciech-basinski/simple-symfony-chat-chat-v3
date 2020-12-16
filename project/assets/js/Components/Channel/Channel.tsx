@@ -1,4 +1,5 @@
 import React from "react";
+import { Trans } from 'react-i18next';
 
 interface IProps {
     name: string;
@@ -18,7 +19,7 @@ class Channel extends React.Component<IProps, any> {
             <div onClick={() => this.props.handleClick(this.props.channelKey)}
                  className={"text-in-info channel " + (this.props.channel === this.props.channelKey ? "active" : "")}
                  data-value={this.props.channelKey}>
-                {this.props.name}
+                <Trans>{'channel.' + this.props.name}</Trans>
                 {this.props.messages ? "(" + this.props.messages + ")" : null}
             </div>
         );
