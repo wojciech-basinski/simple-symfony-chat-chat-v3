@@ -44,7 +44,7 @@ class Message extends React.Component<IProps, any> {
                 <div className="row">
                     <div id="emoji-container"/>
                     <div className="col-xs-10">
-                        <textarea ref={this.textArea} className="form-control" id="message-text" cols={50} rows={2} value={this.props.messageText} onKeyPress={this.handleKeyPress} onChange={this.handleChange}/>
+                        <textarea autoFocus ref={this.textArea} className="form-control" id="message-text" cols={50} rows={2} value={this.props.messageText} onKeyPress={this.handleKeyPress} onChange={this.handleChange}/>
                     </div>
                     <div className="col-xs-2">
                         <button className="btn btn-success btn-block" id="send" onClick={() => this.props.sendMessage()}><Trans>chat.send</Trans></button>
