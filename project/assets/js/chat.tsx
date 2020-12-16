@@ -12,6 +12,7 @@ declare global {
             languagePath: object;
             changeChannelPath: string;
             locale: string;
+            token: string;
         }
     }
 }

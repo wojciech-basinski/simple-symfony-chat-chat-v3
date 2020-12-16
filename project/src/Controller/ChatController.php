@@ -59,57 +59,6 @@ class ChatController extends Controller
     }
 
     /**
-     * @Route("/chat/add/", name="chat_add", methods={"POST"})
-     *
-     * Add new message
-     *
-     * Check if message can be added to database and get messages that was wrote between
-     * last refresh and calling this method
-     */
-    public function addAction(Request $request, AddMessage $message): JsonResponse
-    {
-        $parameters = json_decode($request->getContent(), true);
-        $messageText = $parameters['text'] ?? null;
-        $user = $this->getUser();
-        $channel = $parameters['channel'] ?? null;
-
-        $response = $message->addMessageToDatabase($user, $messageText, $channel);
-
-        return $response;
-    }
-
-    /**
-     * @Route("/chat/initial/", name="chat_get_initial", methods={"GET"})
-     */
-    public function initialAction(
-        Request $request,
-        Channel $channelUtil,
-        ChatConfig $config,
-        TranslatorInterface $translator,
-        MessageGetter $messageGetter
-    ): Response {
-        $changeChannel = 0;
-        $channel = (int) $request->query->get('channel') ?? 1;
-        $canBeOnChannel = $channelUtil->checkIfUserCanBeOnThatChannel($this->getUser(), $channel);
-        if (!$canBeOnChannel) {
-            $channel = 1;
-            $changeChannel = 1;
-        }
-        $messages = $messageGetter->getMessages($this->getUser(), $channel);
-        $channels = [];
-        foreach ($config->getChannels($this->getUser()) as $key => $value) {
-            $channelNameTranslated = $translator->trans('channel.' . $value, [], 'chat', $translator->getLocale());
-            $channels[$key] = ($channelNameTranslated !== 'channel.' . $value) ? $channelNameTranslated : $value;
-        }
-        $return = [
-            'messages' => $messages,
-            'kickFromChannel' => $changeChannel,
-            'channels' => $channels
-        ];
-        return new JsonResponse($return);
-    }
-
-    /**
      * @Route("/chat/delete/", name="chat_delete")
      * @Security("has_role('ROLE_MODERATOR')")
      *

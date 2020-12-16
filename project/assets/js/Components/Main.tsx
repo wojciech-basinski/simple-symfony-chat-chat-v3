@@ -78,15 +78,17 @@ class Main extends React.Component<any, IState> {
 
     sockets = (channels:{}): void => {
         this.socket = socketIOClient(SOCKET_PATH);
-        this.socket.on("connect", (data) => {
+        this.socket.on("connect", () => {
             Object.keys(channels).forEach((key) => {
-                this.socket.emit("room", [
-                    key
-                ]);
+                this.socket.emit("room", {
+                    'key': key,
+                    'token': window.reactProps.token
+                });
             });
-            this.socket.emit("room", [
-                this.props.props.privateMessageChannelId
-            ]);
+            this.socket.emit("room", {
+                'key': this.props.props.privateMessageChannelId,
+                'token': window.reactProps.token
+            });
             this.connectUserOnSocket();
         });
         this.socket.on("users", (data) => {
@@ -251,7 +253,7 @@ class Main extends React.Component<any, IState> {
             this.setState({
                 rollDisabled: true
             });
-            setTimeout(() => this.unlockRoll(), ROLL_COOLDOWN)
+            setTimeout(this.unlockRoll, ROLL_COOLDOWN)
         }
     };
 

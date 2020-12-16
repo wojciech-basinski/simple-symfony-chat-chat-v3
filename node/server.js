@@ -1,9 +1,11 @@
-var socket = require('socket.io'),
+var consts = require('./env.local.js'),
+    socket = require('socket.io'),
     express = require('express'),
     logger = require('winston'),
-    http = require('http');
+    http = require('http'),
+    axios = require('axios');
 
-const util = require('util')
+
 
 logger.add(new logger.transports.Console({ colorize: true, timestamp: true }));
 app = express();
@@ -28,8 +30,12 @@ io.sockets.on("connection", (socket) => {
         emitUsers();
     });
     socket.on("room", (data) => {
-        //check permissions in php how? api with jwt?
-        socket.join(data);
+        axios.get(consts.CHECK_CHANNEL_URL + data.key, {headers: {'Authorization': 'Bearer ' + data.token}})
+            .then((response) => {
+                if (response.data === '1') {
+                    socket.join(data.key);
+                }
+            });
     });
     socket.on("new_message", (data) => {
         io.sockets.in(data.channel).emit("message", data.message);

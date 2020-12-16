@@ -20,6 +20,12 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        api:
+            pattern:   ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
         main:
             anonymous: ~
             form_login:
@@ -45,6 +51,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api, role: ROLE_USER }
         - { path: /chat/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: /chat/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: /chat/img, role: IS_AUTHENTICATED_ANONYMOUSLY }

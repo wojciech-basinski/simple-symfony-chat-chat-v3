@@ -12,7 +12,8 @@ async function sendMessage(message: string, sendPath: string, user: User, channe
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + window.reactProps.token
             },
             body: JSON.stringify(data)
         });
