@@ -4,8 +4,8 @@
 {% block javascripts %}
     <script>
         window.reactProps = {
-            initialPath: '{{ url('chat_get_initial') }}',
-            sendPath : '{{ url('chat_add') }}',
+            initialPath: '{{ url('api_initial') }}',
+            sendPath : '{{ url('api_message_add') }}',
             user : {
                 userName: '{{ user.username }}',
                 userRole: '{{ user.getChatRoleAsText }}',

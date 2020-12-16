@@ -15,7 +15,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ApiController extends Controller
 {
     /**
-     * @Route("/api/add/", name="chat_add", methods={"POST"})
+     * @Route("/api/add/", name="api_message_add", methods={"POST"})
      *
      * Add new message
      *
@@ -32,7 +32,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/initial/", name="chat_get_initial", methods={"GET"})
+     * @Route("/api/initial/", name="api_initial", methods={"GET"})
      */
     public function initialAction(
         Request $request,
@@ -63,7 +63,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/check", name="chat_check_channel", methods={"GET"})
+     * @Route("/api/check", name="api_check_channel", methods={"GET"})
      *
      * Checks if user can subscribe channel via socket
      */
