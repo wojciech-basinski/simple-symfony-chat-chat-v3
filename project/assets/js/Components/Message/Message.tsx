@@ -12,6 +12,21 @@ class Message extends React.Component<IProps, any> {
         super(props);
     }
 
+    focusTextarea = () => {
+        const textArea = document.getElementById("message-text");
+        if (textArea) {
+            textArea.focus();
+        }
+    };
+
+    componentDidUpdate(): void {
+        this.focusTextarea();
+    }
+
+    shouldComponentUpdate(nextProps: Readonly<IProps>, nextState: Readonly<any>, nextContext: any): boolean {
+        return nextProps.messageText !== this.props.messageText;
+    }
+
     handleChange = (e):void => {
         this.props.handleChange(e.target.value);
     };
