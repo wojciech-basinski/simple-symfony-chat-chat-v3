@@ -117,6 +117,7 @@ class Main extends React.Component<any, IState> {
                     const newMessages = prevState.messages;
                     newMessages[newMessages.length] = data;
                     return {
+                        ...prevState,
                         messages: newMessages
                     }
                 });
@@ -353,7 +354,7 @@ class Main extends React.Component<any, IState> {
         return (
             <div className="row chat" id="chat-row-main">
                 <ErrorModal modal={this.state.modal} toggleModal={this.toggleModal} message={this.state.modalMessage}/>
-                <MessagesBox messages={this.state.messages} user={this.state.user} insertPm={this.insertPm} insertNick={this.insertNick}/>
+                <MessagesBox messages={[...this.state.messages]} user={this.state.user} insertPm={this.insertPm} insertNick={this.insertNick}/>
                 <UsersList messagesOnOtherChannels={this.state.messagesOnOtherChannels} changeChannel={this.changeChannel} users={this.state.usersOnline} locale={this.state.locale} user={this.state.user} channels={this.state.channels} channel={this.state.channel}/>
                 <EmoticonsList handleEmoticonClick={this.handleAddEmoticonToMessageText} handleRollClick={this.sendRoll} rollDisabled={this.state.rollDisabled}/>
                 <SettingsList status={this.state.status} settings={this.state.settings} handleChangeScroll={this.handleChangeScroll} handleChangeSound={this.handleChangeSound}/>

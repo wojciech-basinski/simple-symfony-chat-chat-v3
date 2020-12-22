@@ -20,6 +20,9 @@ class Message extends React.Component<IProps, any> {
 
     componentDidUpdate(): void {
         this.focusTextarea();
+        const selectionStart = this.textArea.current.selectionStart;
+        const selectionEnd = this.textArea.current.selectionEnd;
+        // console.log('updated', selectionStart, selectionEnd);
     }
 
     shouldComponentUpdate(nextProps: Readonly<IProps>, nextState: Readonly<any>, nextContext: any): boolean {
@@ -27,13 +30,32 @@ class Message extends React.Component<IProps, any> {
     }
 
     handleChange = (e):void => {
+        // console.log('handle change');
+        // console.log(this.textArea.current.selectionStart);
+        // console.log(this.textArea.current.selectionEnd);
         this.props.handleChange(e.target.value);
     };
 
     handleKeyPress = (e): void => {
-        if (e.which == 13 && !e.shiftKey) {
+
+        console.log('keypressed', e.which);
+        console.log(this.textArea.current.selectionStart);
+        console.log(this.textArea.current.selectionEnd);
+        if (e.which === 13 && !e.shiftKey) {
             e.preventDefault();
             this.props.sendMessage();
+        }
+    };
+
+    handleClick = () => {
+        if (typeof(this.textArea) === 'object' && this.textArea!==null) {
+            const selectionStart = this.textArea.current.selectionStart;
+            const selectionEnd = this.textArea.current.selectionEnd;
+            // console.log(selectionStart, selectionEnd);
+            // this.setState({
+            //     selectionStart: selectionStart,
+            //     selectionEnd: selectionEnd,
+            // })
         }
     };
 
@@ -44,7 +66,7 @@ class Message extends React.Component<IProps, any> {
                 <div className="row">
                     <div id="emoji-container"/>
                     <div className="col-xs-10">
-                        <textarea autoFocus ref={this.textArea} className="form-control" id="message-text" cols={50} rows={2} value={this.props.messageText} onKeyPress={this.handleKeyPress} onChange={this.handleChange}/>
+                        <textarea onClick={this.handleClick} autoFocus ref={this.textArea} className="form-control" id="message-text" cols={50} rows={2} value={this.props.messageText} onKeyUp={this.handleKeyPress} onChange={this.handleChange}/>
                     </div>
                     <div className="col-xs-2">
                         <button className="btn btn-success btn-block" id="send" onClick={() => this.props.sendMessage()}><Trans>chat.send</Trans></button>

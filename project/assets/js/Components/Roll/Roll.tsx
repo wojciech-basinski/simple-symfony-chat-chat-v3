@@ -13,7 +13,7 @@ class Roll extends React.Component<IProps, any> {
 
     render() {
         return (
-            <img className={"emoticon-text " + (this.props.rollDisabled ? 'disabled' : 'kursor')} id="roll-img" alt="roll" src={ROLL_IMG} onClick={this.props.handleClick}/>
+            <img className={"emoticon-text " + (this.props.rollDisabled ? 'disabled' : 'pointer')} id="roll-img" alt="roll" src={ROLL_IMG} onClick={this.props.handleClick}/>
         );
     }
 

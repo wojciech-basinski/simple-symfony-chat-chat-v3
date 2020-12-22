@@ -26,7 +26,7 @@ class MessagesTable extends React.Component<IProps, any> {
         let that = this;
         let group:any[] = [];
         let lastMessageId:number = 0;
-        Object.keys(messagesList).forEach(function (key, i, channels) {
+        Object.keys(messagesList).forEach(function (key, i) {
             const date = createDate(messagesList[i].date.date);
             const canDelete = (user.userRole === 'administrator' || user.userRole === 'moderator');
             const isPm = (messagesList[i].privateMessage);
