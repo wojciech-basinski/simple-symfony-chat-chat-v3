@@ -32,12 +32,12 @@
 {#    <script type="text/javascript" src="{{ asset('js/' ~ locale ~ '.js') }}"></script>#}
 {#    <script type="text/javascript" src="{{ asset('js/emojionearea.min.js') }}"></script>#}
 {#    <script type="text/javascript" src="{{ asset('js/jquery.scrollTo.js') }}"></script>#}
-    {% if is_granted('ROLE_MODERATOR') %}
-        <script>
-            var deletePath = '{{ url('chat_delete') }}';
-        </script>
-        <script type="text/javascript" src="{{ asset('js/delete.js') }}"></script>
-    {% endif %}
+{#    {% if is_granted('ROLE_MODERATOR') %}#}
+{#        <script>#}
+{#            var deletePath = '{{ url('chat_delete') }}';#}
+{#        </script>#}
+{#        <script type="text/javascript" src="{{ asset('js/delete.js') }}"></script>#}
+{#    {% endif %}#}
 {% endblock %}
 {% block stylesheets %}
     {{ encore_entry_link_tags('chat') }}

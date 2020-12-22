@@ -75,4 +75,12 @@ class ApiController extends Controller
         }
         return new JsonResponse(json_encode(0));
     }
+
+    /**
+     * @Route("/api/message/delete", name="api_message_delete", methods={"POST"})
+     */
+    public function deleteMessageAction(): JsonResponse
+    {
+
+    }
 }
