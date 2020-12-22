@@ -1,0 +1,46 @@
+#online-users {
+  height: 81%;
+  margin-top: 10px;
+
+  #panel-users {
+    height: 100%;
+
+    .info-text {
+      font-size: 16px;
+      padding-left: 5px;
+      margin-top: 10px;
+    }
+
+    .text-in-info {
+      padding-left: 10px;
+      cursor: pointer;
+
+      &.active {
+        background: #5cb85c;
+      }
+    }
+
+    #users-box {
+      overflow: auto;
+      overflow-x: hidden;
+
+      .administrator {
+        color: red;
+      }
+
+      .moderator {
+        color: #FFFF00;
+      }
+
+      .user {
+        color: #000;
+      }
+    }
+
+    .logout {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+}
+

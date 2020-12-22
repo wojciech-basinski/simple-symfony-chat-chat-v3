@@ -1,0 +1,41 @@
+.group-messages {
+  margin-top: 3px;
+
+  .date-hidden {
+    padding-top: 2px;
+    float: left;
+    font-size: 14px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    float: left;
+  }
+
+  .presentation {
+    margin-bottom: 3px;
+
+    .date {
+      font-size: 15px;
+      margin-right: 4px;
+      font-style: italic;
+    }
+
+    .nick {
+      font-size: 17px;
+    }
+
+    .administrator {
+      color: red;
+    }
+
+    .moderator {
+      color: #FFFF00;
+    }
+
+    .user {
+      color: #000;
+    }
+  }
+}

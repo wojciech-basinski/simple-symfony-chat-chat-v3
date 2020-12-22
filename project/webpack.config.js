@@ -25,6 +25,7 @@ Encore
      */
     .enableReactPreset()
     .addEntry('chat', './assets/js/chat.tsx')
+    .addEntry('black', './assets/css/black-theme/black.scss')
     //.addEntry('page1', './assets/js/page1.js')
     //.addEntry('page2', './assets/js/page2.js')
 
@@ -54,7 +55,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     .enableTypeScriptLoader()

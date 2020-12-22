@@ -1,0 +1,43 @@
+#settings {
+  .status, .sound, .scroll {
+    margin-top: 5px;
+    display: inline-block;
+    width: 33px;
+    height: 33px;
+  }
+
+  .ok {
+    background-image: url("/../../img/settings/ok.png");
+    background-size: cover;
+  }
+
+  .in-progress {
+    background-image: url("/../../img/settings/in_progress.png");
+    background-size: cover;
+  }
+
+  .wrong {
+    background-image: url("/../../img/settings/wrong.png");
+    background-size: cover;
+  }
+
+  .audio-on {
+    background-image: url("/../../img/settings/sound.png");
+    background-size: cover;
+  }
+
+  .audio-off {
+    background-image: url("/../../img/settings/nosound.png");
+    background-size: cover;
+  }
+
+  .scroll {
+    background-image: url("/../../img/settings/go.png");
+    background-size: cover;
+  }
+
+  .no-scroll {
+    background-image: url("/../../img/settings/stop.png");
+    background-size: cover;
+  }
+}

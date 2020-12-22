@@ -1,0 +1,23 @@
+#messages {
+  height: 81%;
+  margin-top: 10px;
+
+  #panel-messages {
+    height: 100%;
+
+    .panel-messages {
+      height: 100%;
+
+      #messages-box {
+        font-size: 15px;
+        width: 100%;
+        height: 100%;
+        line-height: 1.10;
+        border-top: #d6e9c6 solid 5px;
+        overflow: auto;
+        overflow-x: hidden;
+        word-wrap: break-word;
+      }
+    }
+  }
+}

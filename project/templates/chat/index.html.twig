@@ -40,8 +40,10 @@
     {% endif %}
 {% endblock %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/black.css') }}">
+    {{ encore_entry_link_tags('chat') }}
+    {{ encore_entry_link_tags('black') }}
+{#    <link rel="stylesheet" href="{{ asset('css/style.css') }}">#}
+{#    <link rel="stylesheet" href="{{ asset('css/black.css') }}">#}
 {#    <link rel="stylesheet" href="{{ asset('css/emojionearea.min.css') }}">#}
 {% endblock %}
 

@@ -4,6 +4,7 @@ import Main from "./Components/Main";
 import User from "./Components/Users/User";
 import { I18nextProvider } from 'react-i18next';
 import i18n from './Locale/i18n';
+import  '../css/chat.scss';
 
 declare global {
     interface Window {
