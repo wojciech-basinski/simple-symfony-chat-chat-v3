@@ -48,7 +48,9 @@ export default class MessagePresentation extends React.Component<IProps, any>{
                         </OverlayTrigger>
                     </div>
                     <div className="message message-text padding-left">
-                        {Parser(parseMessage(this.props.message.text, this.props.isPm, this.props.user))}
+                        <>
+                            {parseMessage(this.props.message.text, this.props.isPm, this.props.user)}
+                        </>
                         {canDelete}
                     </div>
                 </div>

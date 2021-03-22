@@ -89,6 +89,60 @@ export const emoticonsText = [
     ':facepalm:'
 ];
 
+export const emoticonsRegex = [
+    ':\\)',
+    ':\\(',
+    ';\\)',
+    [
+        ':P',
+        ';p',
+        ';P'
+    ],
+    [
+        ':D',
+        ';D',
+    ],
+    [
+        ':\\|',
+        ';\\/'
+    ],
+    [
+        ':O',
+        ';o',
+        ';O'
+    ],
+    ':\\?',
+    '8\\)',
+    '8o',
+    'B\\)',
+    ':\\-\\)',
+    ':\\-\\(',
+    [
+        ':\\-\\*',
+        ':\\*'
+    ],
+    'O\\-D',
+    ':\\-D',
+    ':o\\)',
+    ':idea:',
+    ':important:',
+    ':help:',
+    ':error:',
+    ':warn:',
+    ':favorite:',
+    ':pepe:',
+    ':ie:',
+    ':cebula:',
+    ':shock:',
+    ':zolwik:',
+    ':predobear:',
+    ':mis:',
+    ':gengar:',
+    ':piplup:',
+    ':naboki:',
+    ':facepalm:'
+];
+
 export const emoticonsEmoji = {
     ':kiss_mm:':'1f468-2764-1f48b-1f468',
     ':kiss_woman_man:':'1f469-2764-1f48b-1f468',

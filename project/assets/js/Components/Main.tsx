@@ -331,7 +331,6 @@ class Main extends React.Component<any, IState> {
             messageText: message
         });
         if (message === '') {
-            console.log('emit not typing');
             this.socket.emit("typing", {
                 typing: false,
                 userName: this.state.user.userName

@@ -22,7 +22,6 @@ class Message extends React.Component<IProps, any> {
         this.focusTextarea();
         const selectionStart = this.textArea.current.selectionStart;
         const selectionEnd = this.textArea.current.selectionEnd;
-        // console.log('updated', selectionStart, selectionEnd);
     }
 
     shouldComponentUpdate(nextProps: Readonly<IProps>, nextState: Readonly<any>, nextContext: any): boolean {

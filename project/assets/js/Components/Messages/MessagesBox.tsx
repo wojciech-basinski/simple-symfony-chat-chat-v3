@@ -18,8 +18,7 @@ class MessagesBox extends React.Component<IProps, any> {
     }
 
     componentDidUpdate(prevProps: Readonly<IProps>, prevState: Readonly<any>, snapshot?: any): void {
-        console.log('abcd');
-        this.scroll.current.scrollTo(100, 100);//TODO
+        //this.scroll.current.scrollTo(100, 100);//TODO
     }
 
     shouldComponentUpdate(nextProps: Readonly<IProps>, nextState: Readonly<any>, nextContext: any): boolean {
