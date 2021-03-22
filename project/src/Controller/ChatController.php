@@ -108,6 +108,9 @@ class ChatController extends Controller
     public function reverseProxyAction(Request $request): Response
     {
         $url = $request->query->get('url');
+        if (strpos($url, '..') !== false) {
+            $url = null;
+        }
         $response = new Response();
         $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_INLINE, 'name');
         $response->headers->set('Content-Disposition', $disposition);
