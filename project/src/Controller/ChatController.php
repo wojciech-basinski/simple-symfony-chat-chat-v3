@@ -95,7 +95,6 @@ class ChatController extends Controller
      */
     public function logoutAction(): Response
     {
-        //TODO remove from online socket
         return $this->redirectToRoute('fos_user_security_logout');
     }
 

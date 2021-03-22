@@ -1,7 +1,6 @@
 import React from "react";
 import {OverlayTrigger, Tooltip} from "react-bootstrap";
 import {dateGetHours, dateGetMinutes, dateGetSeconds} from "../../Utils/Date/DateOperations";
-import Parser from "html-react-parser";
 import IMessage from "./IMessage";
 import User from "../Users/User";
 import {getAvatarUrl} from "../../Utils/Avatar/AvatarUrl";
@@ -18,7 +17,7 @@ interface IProps {
     user: User;
 }
 
-export default class MessagePresentation extends React.Component<IProps, any>{
+export default class MessagePresentation extends React.Component<IProps, any> {
     constructor(props:IProps) {
         super(props);
         this.state = { hasError: false };
@@ -35,7 +34,7 @@ export default class MessagePresentation extends React.Component<IProps, any>{
         const userRole = message.userRole;
         const date = this.props.date;
         const avatarUrl = getAvatarUrl(message.userAvatar);
-        const canDelete = this.props.canDelete ? <span className="pull-right kursor" data-id={messageId}>&times;</span> : null;
+        const canDelete = this.props.canDelete ? <span className="pull-right pointer" data-id={messageId}>&times;</span> : null;
         return(
             <div data-id={messageId} data-user-id={userId}>
                 <img className="avatar" src={avatarUrl} alt={"avatar"}/>
